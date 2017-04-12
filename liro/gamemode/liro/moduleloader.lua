@@ -48,6 +48,7 @@ end
 
 function liro.loadModules()
 	moduleLoadLog = {
+		"----------------------------------",
 		"Attempting to load modules (" .. tostring(liro.countModules()) .. " detected):"
 	}
 
@@ -69,7 +70,8 @@ function liro.loadModules()
 		end
 	end
 
-	table.insert(moduleLoadLog, "All modules loaded")
+	table.insert(moduleLoadLog, "All modules successfully loaded!")
+	table.insert(moduleLoadLog, "-----------------------------------")
 
 	liro.fancyPrint(moduleLoadLog)
 end
