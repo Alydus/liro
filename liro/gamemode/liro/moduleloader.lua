@@ -3,7 +3,7 @@
 local gamemodeFolderName = GM.FolderName
 
 local function liro.recursiveInclusion(moduleName, folderPath, first)
-	local folderFiles, folderDirectories = file.Find(folderPath .. "/*")
+	local folderFiles, folderDirectories = file.Find(folderPath .. "/*", "LUA")
 
 	for _, folder in pairs(folderDirectories) do
 		liro.recursiveInclusion(moduleName, folderPath .. "/" .. folder, false)
