@@ -8,5 +8,14 @@ AddCSLuaFile("shared.lua")
 // Define base Liro data array
 liro = liro or {}
 
-// Include serverside configuration
-include("config.lua")
+// Include shared configuration
+include("liro/config.lua")
+AddCSLuaFile("liro/config.lua")
+
+// Include functions
+include("liro/functions.lua")
+AddCSLuaFile("liro/functions.lua")
+
+// Include module loader
+include("liro/moduleloader.lua")
+AddCSLuaFile("liro/moduleloader.lua")
