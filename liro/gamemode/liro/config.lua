@@ -4,13 +4,13 @@
 allows you to customize the boot of the gamemode. */
 
 liro.config = {
-	doInitMessages = true // Output information on Liro's initialization?
+	doInitMessages = true, // Output information on Liro's initialization?
 
-	enableModules = true // Enable Liro's module system?
+	enableModules = true, // Enable Liro's module system?
 
 	disabledModules = { // Disable the initialization of any modules?
 		// "modulename",
-	}
+	},
 
 	moduleLoadPrefixes = {
 		server = "sv_",

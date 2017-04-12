@@ -61,3 +61,5 @@ local function liro.loadModules()
 		liro.recursiveInclusion(moduleName, modulePath, true) // liro/gamemode/modules/helloworld
 	end
 end
+
+liro.loadModules()

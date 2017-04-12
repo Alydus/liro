@@ -1,0 +1,7 @@
+"liro"
+{
+	"base"		"base"
+	"title"		""
+	"maps"		"^gm_"
+	"menusystem"	"1"
+}
