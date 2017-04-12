@@ -11,6 +11,7 @@ function liro.recursiveInclusion(moduleName, folderPath, first)
 
 	for _, fileToLoad in pairs(folderFiles) do
 		local relativePath = string.gsub(folderPath .. "/" .. fileToLoad, GM.FolderName .. "/gamemode/", "")
+		print(relativePath)
 	
 		if string.match( fileToLoad, "^" .. liro.config.moduleLoadPrefixes.server) then
 			if SERVER then
