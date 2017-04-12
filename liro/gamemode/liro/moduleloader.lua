@@ -2,7 +2,7 @@
 
 local gamemodeFolderName = GM.FolderName
 
-local function liro.recursiveInclusion(moduleName, folderPath, first)
+function liro.recursiveInclusion(moduleName, folderPath, first)
 	local folderFiles, folderDirectories = file.Find(folderPath .. "/*", "LUA")
 
 	for _, folder in pairs(folderDirectories) do
@@ -34,7 +34,7 @@ local function liro.recursiveInclusion(moduleName, folderPath, first)
 	end
 end
 
-local function liro.countModules()
+function liro.countModules()
 	local moduleCount = 0
 
 	local _, moduleFolders = file.Find(gamemodeFolderName .. "/gamemode/modules/*", "LUA")
@@ -46,7 +46,7 @@ local function liro.countModules()
 	return moduleCount
 end
 
-local function liro.loadModules()
+function liro.loadModules()
 	local moduleLoadLog = {
 		"Attempting to load modules (" .. tostring(liro.countModules()) .. " detected):"
 	}
