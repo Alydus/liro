@@ -47,19 +47,31 @@ function liro.countModules()
 end
 
 function liro.loadModules()
-	local moduleLoadLog = {
+	moduleLoadLog = {
 		"Attempting to load modules (" .. tostring(liro.countModules()) .. " detected):"
 	}
 
 	local _, moduleFolders = file.Find(gamemodeFolderName .. "/gamemode/modules/*", "LUA")
 
 	for _, moduleName in pairs(moduleFolders) do
-		table.insert(moduleLoadLog, "Module: " .. moduleName)
+		if table.HasValue(liro.config.disabledModules, moduleName) then
+			local moduleDisabled = true
+			table.insert(moduleLoadLog, "Module: " .. moduleName .. " (Disabled)")
+		else
+			local moduleDisabled = false
+			table.insert(moduleLoadLog, "Module: " .. moduleName .. " (Enabled)")
+		end
 
 		local modulePath = gamemodeFolderName .. "/gamemode/modules/" .. moduleName
 
-		liro.recursiveInclusion(moduleName, modulePath, true) // liro/gamemode/modules/helloworld
+		if not moduleDisabled then
+			liro.recursiveInclusion(moduleName, modulePath, true) // liro/gamemode/modules/helloworld
+		end
 	end
+
+	table.insert(moduleLoadLog, "All modules loaded")
+
+	liro.fancyPrint(moduleLoadLog)
 end
 
 liro.loadModules()
