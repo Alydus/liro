@@ -53,7 +53,7 @@ function liro.loadModules()
 
 	local _, moduleFolders = file.Find(gamemodeFolderName .. "/gamemode/modules/*", "LUA")
 
-	for _, moduleName in pairs(moduleFolders)
+	for _, moduleName in pairs(moduleFolders) do
 		table.insert(moduleLoadLog, "Module: " .. moduleName)
 
 		local modulePath = gamemodeFolderName .. "/gamemode/modules/" .. moduleName
