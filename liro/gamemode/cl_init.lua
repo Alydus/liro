@@ -3,6 +3,9 @@
 // Include dependant files
 include("shared.lua")
 
+// Define base Liro data array
+liro = liro or {}
+
 // Include shared configuration
 include("liro/config.lua")
 

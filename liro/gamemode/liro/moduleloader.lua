@@ -73,7 +73,9 @@ function liro.loadModules()
 	table.insert(moduleLoadLog, "All modules successfully loaded!")
 	table.insert(moduleLoadLog, "-----------------------------------")
 
-	liro.fancyPrint(moduleLoadLog)
+	if liro.config.doModuleLoadMessages then
+		liro.fancyPrint(moduleLoadLog)
+	end
 end
 
 liro.loadModules()

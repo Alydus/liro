@@ -4,7 +4,7 @@
 allows you to customize the boot of the gamemode. */
 
 liro.config = {
-	doInitMessages = true, // Output information on Liro's initialization?
+	doModuleLoadMessages = true, // Output information on Liro's initialization?
 
 	enableModules = true, // Enable Liro's module system?
 
