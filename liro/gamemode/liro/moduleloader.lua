@@ -11,16 +11,19 @@ function liro.recursiveInclusion(moduleName, folderPath)
 
 	for _, fileToLoad in pairs(folderFiles) do
 		local relativePath = folderPath .. "/" .. fileToLoad
-	
+		
+		// Server File
 		if string.match( fileToLoad, "^" .. liro.config.moduleLoadPrefixes.server) then
 			if SERVER then
 				include(relativePath)
 			end
+		// Shared File
 		elseif string.match( fileToLoad, "^" .. liro.config.moduleLoadPrefixes.shared) then
 			include(relativePath)
 			if SERVER then
 				AddCSLuaFile(relativePath)
 			end
+		// Client File
 		elseif string.match( fileToLoad, "^" .. liro.config.moduleLoadPrefixes.client) then
 			AddCSLuaFile(relativePath)
 			if CLIENT then
