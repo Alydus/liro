@@ -18,6 +18,13 @@ liro.config = {
 		server = "sv_",
 		client = "cl_",
 		shared = "sh_"
+		perModuleLoadPrefixes = {
+			simpledebug = {
+				server = "sv_",
+				client = "cl_",
+				shared = "sh_"
+			}
+		}
 	},
 	
 	/*moduleConfiguration = {
