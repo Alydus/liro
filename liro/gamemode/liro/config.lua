@@ -17,23 +17,14 @@ liro.config = {
 	moduleLoadPrefixes = {
 		server = "sv_",
 		client = "cl_",
-		shared = "sh_"
-		perModuleLoadPrefixes = {
-			simpledebug = {
-				server = "sv_",
-				client = "cl_",
-				shared = "sh_"
-			}
-		}
+		shared = "sh_",
 	},
-	
-	/*moduleConfiguration = {
-                simpledebug = {
-                    enableSimpleDebug = true
-                },
-
-                playerdisplay = {
-                    enablePlayerDisplay = true
-                }
-    }*/
+  
+  	perModuleLoadPrefixes = {
+		simpledebug = {
+    			server = "sv_",
+			client = "cl_",
+			shared = "sh_"
+      		}
+	},
 }
