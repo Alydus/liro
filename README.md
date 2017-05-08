@@ -6,5 +6,5 @@ Liro is a modular Garry's Mod gamemode base. It has been designed from the groun
 * Global functions that can be reused from the Liro base files
 * No messing about with include() and AddCSLuaFile()
 * Example modules to help developers get started
-* Configurable file prefixes for running on different enviroments (e.g. sh_, sv_, cl_)
+* Configurable file prefixes (per module & global) for running files in different enviroments (e.g. sh_, sv_, cl_)
 * Ability to disable/enable modules in the base config. (gamemode/liro/config.lua)
