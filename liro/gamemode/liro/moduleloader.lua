@@ -14,11 +14,11 @@ function liro.recursiveInclusion(moduleName, folderPath)
 	
 		if istable(liro.config.perModuleLoadPrefixes[moduleName]) then
 			local serverLoadPrefix = liro.config.perModuleLoadPrefixes[moduleName].server
-      			local clientLoadPrefix = liro.config.perModuleLoadPrefixes[moduleName].client
-      			local sharedLoadPrefix = liro.config.perModuleLoadPrefixes[moduleName].shared
+				local clientLoadPrefix = liro.config.perModuleLoadPrefixes[moduleName].client
+				local sharedLoadPrefix = liro.config.perModuleLoadPrefixes[moduleName].shared
 		else
-      			local serverLoadPrefix = liro.config.moduleLoadPrefixes.server
-      			local clientLoadPrefix = liro.config.moduleLoadPrefixes.client
+				local serverLoadPrefix = liro.config.moduleLoadPrefixes.server
+				local clientLoadPrefix = liro.config.moduleLoadPrefixes.client
       			local sharedLoadPrefix = liro.config.moduleLoadPrefixes.shared
       		end
 	
