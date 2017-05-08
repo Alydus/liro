@@ -14,13 +14,13 @@ function liro.recursiveInclusion(moduleName, folderPath)
 	
 		if istable(liro.config.perModuleLoadPrefixes[moduleName]) then
 			local serverLoadPrefix = liro.config.perModuleLoadPrefixes[moduleName].server
-				local clientLoadPrefix = liro.config.perModuleLoadPrefixes[moduleName].client
-				local sharedLoadPrefix = liro.config.perModuleLoadPrefixes[moduleName].shared
+			local clientLoadPrefix = liro.config.perModuleLoadPrefixes[moduleName].client
+			local sharedLoadPrefix = liro.config.perModuleLoadPrefixes[moduleName].shared
 		else
-				local serverLoadPrefix = liro.config.moduleLoadPrefixes.server
-				local clientLoadPrefix = liro.config.moduleLoadPrefixes.client
-      			local sharedLoadPrefix = liro.config.moduleLoadPrefixes.shared
-      		end
+			local serverLoadPrefix = liro.config.moduleLoadPrefixes.server
+			local clientLoadPrefix = liro.config.moduleLoadPrefixes.client
+      		local sharedLoadPrefix = liro.config.moduleLoadPrefixes.shared
+      	end
 	
 		// Server File
 		if string.match( fileToLoad, "^" .. serverLoadPrefix) then
@@ -57,7 +57,7 @@ end
 
 function liro.loadModules()
 	moduleLoadLog = {
-		"----------------------------------",
+		"----------------------------------"
 		"Attempting to load modules (" .. tostring(liro.countModules()) .. " detected):"
 	}
 
