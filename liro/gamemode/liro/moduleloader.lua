@@ -57,7 +57,7 @@ end
 
 function liro.loadModules()
 	moduleLoadLog = {
-		"----------------------------------"
+		"----------------------------------",
 		"Attempting to load modules (" .. tostring(liro.countModules()) .. " detected):"
 	}
 
