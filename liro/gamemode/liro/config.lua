@@ -4,17 +4,29 @@
 allows you to customize the boot of the gamemode. */
 
 liro.config = {
-	doModuleLoadMessages = true, // Output information on Liro's initialization?
+	doModuleLoadMessages = true, // Output basic module load information on gamemode initalisation?
 
-	enableModules = true, // Enable Liro's module system?
+	enableModules = true, // Enable the module system?
 
-	disabledModules = { // Disable the initialization of any modules?
-		// "modulename",
+	disabledModules = { // Disable any modules?
+		
 	},
 
+	// Global/per module prefixes that define the enviroment that the file will be loaded in.
+	// You may change these per module for things
 	moduleLoadPrefixes = {
 		server = "sv_",
 		client = "cl_",
 		shared = "sh_"
-	}
+	},
+	
+	/*moduleConfiguration = {
+                simpledebug = {
+                    enableSimpleDebug = true
+                },
+
+                playerdisplay = {
+                    enablePlayerDisplay = true
+                }
+    }*/
 }
