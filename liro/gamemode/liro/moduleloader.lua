@@ -11,17 +11,17 @@ function liro.recursiveInclusion(moduleName, folderPath)
 
 	for _, fileToLoad in pairs(folderFiles) do
 		local relativePath = folderPath .. "/" .. fileToLoad
-	
+
 		if istable(liro.config.perModuleLoadPrefixes[moduleName]) then
-			local serverLoadPrefix = liro.config.perModuleLoadPrefixes[moduleName].server
-			local clientLoadPrefix = liro.config.perModuleLoadPrefixes[moduleName].client
-			local sharedLoadPrefix = liro.config.perModuleLoadPrefixes[moduleName].shared
+			serverLoadPrefix = liro.config.perModuleLoadPrefixes[moduleName].server
+			clientLoadPrefix = liro.config.perModuleLoadPrefixes[moduleName].client
+			sharedLoadPrefix = liro.config.perModuleLoadPrefixes[moduleName].shared
 		else
-			local serverLoadPrefix = liro.config.moduleLoadPrefixes.server
-			local clientLoadPrefix = liro.config.moduleLoadPrefixes.client
-      		local sharedLoadPrefix = liro.config.moduleLoadPrefixes.shared
-      	end
-	
+			serverLoadPrefix = liro.config.moduleLoadPrefixes.server
+			clientLoadPrefix = liro.config.moduleLoadPrefixes.client
+			sharedLoadPrefix = liro.config.moduleLoadPrefixes.shared
+		end
+
 		// Server File
 		if string.match( fileToLoad, "^" .. serverLoadPrefix) then
 			if SERVER then
@@ -57,24 +57,24 @@ end
 
 function liro.loadModules()
 	moduleLoadLog = {
-		"----------------------------------",
-		"Attempting to load modules (" .. tostring(liro.countModules()) .. " detected):"
-	}
+	"----------------------------------",
+	"Attempting to load modules (" .. tostring(liro.countModules()) .. " detected):"
+}
 
-	local _, moduleFolders = file.Find(gamemodeFolderName .. "/gamemode/modules/*", "LUA")
+local _, moduleFolders = file.Find(gamemodeFolderName .. "/gamemode/modules/*", "LUA")
 
-	for _, moduleName in pairs(moduleFolders) do
-		if table.HasValue(liro.config.disabledModules, moduleName) then
-			local moduleDisabled = true
-			table.insert(moduleLoadLog, "MODULE: " .. moduleName .. " (Disabled)")
-		else
-			local moduleDisabled = false
-			table.insert(moduleLoadLog, "MODULE: " .. moduleName .. " (Enabled)")
-		end
+for _, moduleName in pairs(moduleFolders) do
+	if table.HasValue(liro.config.disabledModules, moduleName) then
+		local moduleDisabled = true
+		table.insert(moduleLoadLog, "MODULE: " .. moduleName .. " (Disabled)")
+	else
+		local moduleDisabled = false
+		table.insert(moduleLoadLog, "MODULE: " .. moduleName .. " (Enabled)")
+	end
 
-		local modulePath = gamemodeFolderName .. "/gamemode/modules/" .. moduleName
+	local modulePath = gamemodeFolderName .. "/gamemode/modules/" .. moduleName
 
-		if not moduleDisabled then
+	if not moduleDisabled then
 			liro.recursiveInclusion(moduleName, modulePath) // liro/gamemode/modules/helloworld
 		end
 	end
