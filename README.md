@@ -1,3 +1,5 @@
+![Liro Logo](https://app.alydus.net/alydus/liro/banner.png)
+
 # What is Liro?
 Liro is a modular Garry's Mod gamemode base. It has been designed from the ground up for code reusability and ease of use.
 
