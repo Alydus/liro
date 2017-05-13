@@ -3,7 +3,6 @@
 # What is Liro?
 Liro is a modular Garry's Mod gamemode base. It has been designed from the ground up for code reusability and ease of use.
 
-![Liro Features Banner](https://app.alydus.net/static/alydus/liro/banner_features.png)
 # Features
 * A optimized **recursive module loader** and clean output load logs
 * Global functions that can be reused from the Liro base files
@@ -13,7 +12,6 @@ Liro is a modular Garry's Mod gamemode base. It has been designed from the groun
 * Ability to **disable/enable modules** in the base config. (gamemode/liro/config.lua)
 * All code is mostly all **fully commented**, meaning the code is easy to contribute to and modify to your own needs
 
-![Liro Developer Hooks Banner](https://app.alydus.net/static/alydus/liro/banner_developerhooks.png)
 # Developer Hooks
 ### Attempt Hooks
 * liro.attemptLoadModules - Called when liro attempts to load all of the modules
@@ -25,7 +23,6 @@ Liro is a modular Garry's Mod gamemode base. It has been designed from the groun
 * liro.successfullyLoaded(MODULENAME) - Called when the specified module attempts to load
 * liro.successfullyLoadedModules - Called when liro has successfully loaded all modules
 
-![Liro Developer Functions Banner](https://app.alydus.net/static/alydus/liro/banner_developerfunctions.png)
 # Developer Functions
 ### Return functions
 
