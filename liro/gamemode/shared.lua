@@ -1,6 +1,6 @@
-// Liro - shared.lua
+-- Liro - shared.lua
 
-// Declare gamemode information
+-- Declare gamemode information
 GM.Name = "Liro"
 GM.Author = ""
 GM.Email = ""
