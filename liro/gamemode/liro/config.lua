@@ -43,11 +43,19 @@ Developer Hooks
 
 	-- Attempt hooks
 	liro.attemptLoadModules - Called when liro attempts to load all of the modules
+	liro.attemptLoad(MODULENAME) - Called when the specified module attempts to load
 	liro.attemptCountModules - Called when liro attempts to count all the modules
 
 	-- Success hooks
 	liro.successfullyCountModules - Called when liro successfully loads all the modules
+	liro.successfullyLoaded(MODULENAME) - Called when the specified module attempts to load
 	liro.successfullyLoadedModules - Called when liro has successfully loaded all modules
 --]]
 
+--[[-------------------------------------------------------------------------
+Developer Functions
+-----------------------------------------------------------------------------
+	All of the following hooks are shared (avaliable on all enviroments)
 
+	liro.pullLoadedModules() - Returns the currently loaded module names in a table
+--]]

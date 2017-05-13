@@ -26,3 +26,9 @@ function liro.performError(errorDesc)
 
 	liro.fancyPrint(liroError)
 end
+
+-- liro.pullLoadedModules()
+-- Returns the currently loaded modules
+function liro.pullLoadedModules()
+	return liro.loadedModules
+end

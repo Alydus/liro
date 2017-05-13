@@ -85,6 +85,7 @@ function liro.loadModules()
 	"----------------------------------",
 	"Attempting to load modules (" .. tostring(liro.countModules()) .. " detected):"
 }
+	liro.loadedModules = {}
 
 -- Define a moduleFolders search table
 local _, moduleFolders = file.Find(gamemodeFolderName .. "/gamemode/modules/*", "LUA")
@@ -106,7 +107,13 @@ for _, moduleName in pairs(moduleFolders) do
 
 	-- If the module is not disabled then use recursively include it
 	if not moduleDisabled then
+			if liro.config.enableDeveloperHooks then hook.Call("liro.attemptLoad" .. moduleName) end
+
 			liro.recursiveInclusion(moduleName, modulePath) -- liro/gamemode/modules/helloworld
+
+			table.insert(moduleName, liro.loadedModules)
+
+			if liro.config.enableDeveloperHooks then hook.Call("liro.successfullyLoaded" .. moduleName) end
 		end
 	end
 
