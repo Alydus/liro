@@ -121,7 +121,7 @@ for _, moduleName in pairs(moduleFolders) do
 
 			liro.recursiveInclusion(moduleName, modulePath) -- liro/gamemode/modules/helloworld
 
-			table.insert(moduleName, liro.loadedModules)
+			table.insert(liro.loadedModules, moduleName)
 
 			if liro.config.enableDeveloperHooks then hook.Call("liro.successfullyLoaded" .. moduleName) end
 		end
