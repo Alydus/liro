@@ -11,15 +11,15 @@ liro.config = {
 	enableModules = true, 
 
 	-- Enable developer hooks for liro events?
-	enableDeveloperHooks = true
+	enableDeveloperHooks = true,
 
 	-- Enable AddNetworkString table?
-	enableNetworkStrings = true
+	enableNetworkStrings = true,
 
 	-- Include your network strings in here and they will be util.AddNetworkString'd before module initalization. (e.g. "networkString", "")
 	-- This will only work if enableNetworkStrings is set to true.
 	-- Note that util.AddNetworkString only supports 2048 networkStrings.
-	networkStrings = {}
+	networkStrings = {},
 
 	-- Disable any modules? (e.g. "moduleName", "")
 	disabledModules = {},
