@@ -13,6 +13,14 @@ liro.config = {
 	-- Enable developer hooks for liro events?
 	enableDeveloperHooks = true
 
+	-- Enable AddNetworkString table?
+	enableNetworkStrings = true
+
+	-- Include your network strings in here and they will be util.AddNetworkString'd before module initalization. (e.g. "networkString", "")
+	-- This will only work if enableNetworkStrings is set to true.
+	-- Note that util.AddNetworkString only supports 2048 networkStrings.
+	networkStrings = {}
+
 	-- Disable any modules? (e.g. "moduleName", "")
 	disabledModules = {},
 
@@ -25,14 +33,14 @@ liro.config = {
 	},
   
 	-- When installing a module, you should be informed if the module has specific load prefixes.
-	-- If so, define them in perModuleLoadPrefixes
+	-- If so, define them in perModuleLoadPrefixes.
 
   	perModuleLoadPrefixes = {
-		simpledebug = {
+		--[[simpledebug = {
     			server = "sv_",
 			client = "cl_",
 			shared = "sh_"
-      		}
+      		}--]]
 	},
 }
 

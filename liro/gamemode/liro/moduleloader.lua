@@ -59,6 +59,16 @@ function liro.recursiveInclusion(moduleName, folderPath)
 	end
 end
 
+-- liro.loadNetworkStrings()
+-- Adds networkStrings from config into the network string pool
+function liro.loadNetworkStrings(networkStrings)
+	if not liro.enableNetworkStrings then return false end
+
+	for _, networkString in pairs(networkStrings) do
+		util.AddNetworkString(networkString)
+	end
+end
+
 -- liro.countModules()
 -- Counts all the modules in the module folder
 function liro.countModules()
@@ -134,6 +144,9 @@ end
 if liro.config.enableModules then
 	-- If developer hooks are enabled then call liro.attemptLoadModules
 	if liro.config.enableDeveloperHooks then hook.Call("liro.attemptLoadModules") end
+
+	-- Add all network strings
+	liro.loadNetworkStrings(liro.networkStrings)
 
 	-- Attempt to load all the modules
 	liro.loadModules()
