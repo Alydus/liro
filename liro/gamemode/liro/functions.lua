@@ -1,34 +1,27 @@
 -- Liro - liro/functions.lua
 
--- liro.textPrefix()
--- Prefixes a string with the given prefix
-function liro.textPrefix(prefix, text)
-	return prefix .. " " .. text
-end
-
--- liro.fancyPrint()
--- Prints a table with prefix and suffix
-function liro.fancyPrint(textTable)
-	print(liro.textPrefix("--", "Start of Liro message"))
-	for _, text in pairs(textTable) do
-		print(liro.textPrefix("--", text))
+-- liro.activateDeveloperHook()
+-- Calls a hook after checking if developer hooks are enabled
+function liro.activateDeveloperHook(name, arg)
+	if liro.enableDeveloperHooks then
+		if arg == nil or arg == "" then
+			hook.Call(name)
+		else
+			hook.Call(name, arg)
+		end
 	end
-	print(liro.textPrefix("--", "End of Liro message"))
 end
 
--- liro.performError()
--- Prints a error string
-function liro.performError(errorDesc)
-	local liroError = {
-		"ERROR:",
-		errorDesc,
-	}
-
-	liro.fancyPrint(liroError)
+-- liro.isEmpty(variable)
+-- Checks if a variable is nil
+function liro.isEmpty(s)
+	return s == nil or s == ""
 end
 
--- liro.pullLoadedModules()
--- Returns the currently loaded modules
-function liro.pullLoadedModules()
-	return liro.loadedModules
+-- liro.moduleIntegrity(moduleData)
+function liro.moduleIntegrity(md)
+	if liro.isEmpty(md.folderName) or liro.isEmpty(md.loadPriority) or liro.isEmpty(md.author) or liro.isEmpty(md.description) or liro.isEmpty(md.website) or liro.isEmpty(md.version) then
+		return false
+	end
+	return true
 end

@@ -1,153 +1,190 @@
 -- Liro - moduleloader.lua
 
--- Define variable with gamemode folder name for future inclusion
 local gamemodeFolderName = GM.FolderName
+liro.networkStrings = {}
 
--- liro.recursiveInclusion()
--- Recursively includes a folder as a module
-function liro.recursiveInclusion(moduleName, folderPath)
-	if liro.config.enableDeveloperHooks then hook.Call("liro.attemptRecursiveInclusion") end
+-- liro.recursiveInclusion(moduleName, folderPath)
+-- Recursively includes a folder's files & folders by calling its self upon it's subdirectories
+function liro.recursiveInclusion(moduleData, folderPath)
+	local moduleName = moduleData.folderName
 
-	-- Defines folderFiles and folderDirectories to search
 	local folderFiles, folderDirectories = file.Find(folderPath .. "/*", "LUA")
 
-	-- Recursively include each folder within the current folder
 	for _, folder in pairs(folderDirectories) do
-		liro.recursiveInclusion(moduleName, folderPath .. "/" .. folder)
+		liro.recursiveInclusion(moduleData, folderPath .. "/" .. folder)
 	end
 
-	-- For each file
 	for _, fileToLoad in pairs(folderFiles) do
-		-- Get relative path for file for later inclusion
 		local relativePath = folderPath .. "/" .. fileToLoad
 
-		-- Define loadPrefix variables for different enviroments dependant on config
-		-- If the module has  a specific loadPrefix
-		if istable(liro.config.perModuleLoadPrefixes[moduleName]) then
-			-- Define the loadPrefix for that module as specified in config
-			serverLoadPrefix = liro.config.perModuleLoadPrefixes[moduleName].server
-			clientLoadPrefix = liro.config.perModuleLoadPrefixes[moduleName].client
-			sharedLoadPrefix = liro.config.perModuleLoadPrefixes[moduleName].shared
-		else
-			-- If the module has no specific defined loadPrefix then use default global loadPrefix from config
-			serverLoadPrefix = liro.config.moduleLoadPrefixes.server
-			clientLoadPrefix = liro.config.moduleLoadPrefixes.client
-			sharedLoadPrefix = liro.config.moduleLoadPrefixes.shared
-		end
-
-		-- Server file
-		-- If the file has a serverLoadPrefix then load in serverside enviroment
-		if string.match( fileToLoad, "^" .. serverLoadPrefix) then
-			if SERVER then
-				include(relativePath)
+		if fileToLoad != "registermodule.lua" then
+			if moduleData.loadPrefixes != nil or not moduleData.loadPrefixes then
+				serverLoadPrefix = moduleData.loadPrefixes.server
+				clientLoadPrefix = moduleData.loadPrefixes.client
+				sharedLoadPrefix = moduleData.loadPrefixes.shared
+			else
+				serverLoadPrefix = liro.config.moduleLoadPrefixes.server
+				clientLoadPrefix = liro.config.moduleLoadPrefixes.client
+				sharedLoadPrefix = liro.config.moduleLoadPrefixes.shared
 			end
-		-- Shared file
-		-- If the file has a sharedLoadPrefix then load in all enviroments (shared)
-		elseif string.match( fileToLoad, "^" .. sharedLoadPrefix) then
-			include(relativePath)
-			if SERVER then
+
+			if string.match( fileToLoad, "^" .. serverLoadPrefix) then
+				if SERVER then
+					include(relativePath)
+				end
+			elseif string.match( fileToLoad, "^" .. sharedLoadPrefix) then
+				include(relativePath)
+				if SERVER then
+					AddCSLuaFile(relativePath)
+				end
+			elseif string.match( fileToLoad, "^" .. clientLoadPrefix) then
 				AddCSLuaFile(relativePath)
-			end
-		-- Client File
-		-- If the file has a clientLoadPrefix then load in clientside enviroment
-		elseif string.match( fileToLoad, "^" .. clientLoadPrefix) then
-			AddCSLuaFile(relativePath)
-			if CLIENT then
-				include(relativePath)
+				if CLIENT then
+					include(relativePath)
+				end
 			end
 		end
-	end
-end
-
--- liro.loadNetworkStrings()
--- Adds networkStrings from config into the network string pool
-function liro.loadNetworkStrings(networkStrings)
-	if not liro.enableNetworkStrings then return false end
-
-	for _, networkString in pairs(networkStrings) do
-		util.AddNetworkString(networkString)
 	end
 end
 
 -- liro.countModules()
--- Counts all the modules in the module folder
-function liro.countModules()
-	if liro.config.enableDeveloperHooks then hook.Call("liro.attemptCountModules") end
+-- Returns the amount of modules in the modules folder with no checking
+function liro.countModules(doDisabled)
+	liro.activateDeveloperHook("liro.attemptCountModules")
 
 	local moduleCount = 0
 
 	local _, moduleFolders = file.Find(gamemodeFolderName .. "/gamemode/modules/*", "LUA")
 
 	for _, moduleFolder in pairs(moduleFolders) do
-		moduleCount = moduleCount + 1
+		if not doDisabled or doDisabled == nil then
+			moduleCount = moduleCount + 1
+		else
+			if table.HasValue(liro.config.disabledModuleNames, moduleFolder) then
+				moduleCount = moduleCount + 1
+			end
+		end
 	end
 
-	if liro.config.enableDeveloperHooks then hook.Call("liro.successfullyCountModules") end
+	liro.activateDeveloperHook("liro.successfullyCountModules")
 
 	return moduleCount
 end
 
--- liro.loadModules()
--- Initial function called to load the modules
-function liro.loadModules()
-	-- Define a load log variable to print later
-	moduleLoadLog = {
-	"----------------------------------",
-	"Attempting to load modules (" .. tostring(liro.countModules()) .. " detected):"
-}
-	liro.loadedModules = {}
+-- liro.initalizeModules()
+-- Loads the registermodule file in each module
+function liro.initalizeModules()
+	liro.toLoadModules = {}
 
--- Define a moduleFolders search table
-local _, moduleFolders = file.Find(gamemodeFolderName .. "/gamemode/modules/*", "LUA")
+	local moduleFoldersPath = gamemodeFolderName .. "/gamemode/modules"
+	local _, moduleDirectories = file.Find(moduleFoldersPath .. "/*", "LUA")
 
--- For each module
-for _, moduleName in pairs(moduleFolders) do
-	if table.HasValue(liro.config.disabledModules, moduleName) then
-		-- If the module is disabled then print it as disabled and define variable
-		local moduleDisabled = true
-		table.insert(moduleLoadLog, "MODULE: " .. moduleName .. " (Disabled)")
-	else
-		-- If the module is enabled then print it as enabled and define variable
-		local moduleDisabled = false
-		table.insert(moduleLoadLog, "MODULE: " .. moduleName .. " (Enabled)")
+	for _, moduleName in pairs(moduleDirectories) do
+		if file.Exists(moduleFoldersPath .. "/" .. moduleName .. "/registermodule.lua", "LUA") then
+			AddCSLuaFile(moduleFoldersPath .. "/" .. moduleName .. "/registermodule.lua")
+			include(moduleFoldersPath .. "/" .. moduleName .. "/registermodule.lua")
+		else
+			print("A liro module is missing a registermodule.lua")
+			print("Check the documentation on how to add one")
+		end
 	end
+end
 
-	-- Define variable of relative path of module for inclusion later
-	local modulePath = gamemodeFolderName .. "/gamemode/modules/" .. moduleName
+-- liro.loadModules()
+-- Loads the files within the module in order of load priority and outputs to console status
+function liro.loadModules()
+	table.sort(liro.toLoadModules, function(a, b)
+		return tonumber(a["loadPriority"]) > tonumber(b["loadPriority"])
+	end)
 
-	-- If the module is not disabled then use recursively include it
-	if not moduleDisabled then
-			if liro.config.enableDeveloperHooks then hook.Call("liro.attemptLoad" .. moduleName) end
+	liro.activateDeveloperHook("liro.attemptLoadModules")
 
-			liro.recursiveInclusion(moduleName, modulePath) -- liro/gamemode/modules/helloworld
+	liro.loadedModules = {}
+	liro.unloadedDisabledModules = {}
 
-			table.insert(liro.loadedModules, moduleName)
+	for _, moduleData in pairs(liro.toLoadModules) do
+		local moduleName = moduleData.folderName
 
-			if liro.config.enableDeveloperHooks then hook.Call("liro.successfullyLoaded" .. moduleName) end
+		if not table.HasValue(liro.config.disabledModuleNames, moduleName) then
+
+			if liro.loadedModules[moduleName] then
+				print("Liro has failed to fully load")
+				print("Two modules have the same folder name")
+
+				return false
+			end
+
+			if SERVER then
+				if moduleData.networkStrings and moduleData.networkStrings[1] then
+					for _, networkString in pairs(moduleData.networkStrings) do
+						if networkString != "" then
+							table.insert(liro.networkStrings, networkString)
+							util.AddNetworkString(networkString)
+						else
+							print("Liro detected a empty network string in module '" .. moduleData.folderName .. "'")
+						end
+					end
+				end
+			end
+			liro.activateDeveloperHook("liro.attemptLoad" .. moduleData.folderName)
+
+			liro.recursiveInclusion(moduleData, gamemodeFolderName .. "/gamemode/modules")
+
+			liro.activateDeveloperHook("liro.successfullyLoaded" .. moduleData.folderName, moduleData)
+
+			liro.loadedModules[moduleName] = moduleData
+
+		elseif table.HasValue(liro.config.disabledModuleNames, moduleName) then
+			liro.unloadedDisabledModules[moduleName] = moduleData
 		end
 	end
 
-	-- Add to initial moduleLoadLog noting that all modules have successfully loaded
-	table.insert(moduleLoadLog, "All modules successfully loaded!")
-	table.insert(moduleLoadLog, "-----------------------------------")
-
-	-- If developer hooks are enabled, call liro.allModulesLoaded
-	if liro.config.enableDeveloperHooks then hook.Call("liro.successfullyLoadedModules") end
-
-	-- If moduleLoadMessages is enabled then print load log
-	if liro.config.doModuleLoadMessages then
-		liro.fancyPrint(moduleLoadLog)
+	for networkStringIndex, networkString in pairs(liro.config.networkStrings) do
+		if networkString != "" then
+			table.insert(liro.networkStrings, networkString)
+			util.AddNetworkString(networkString)
+		else
+			print("Liro detected a empty network string in the config (liro.config.networkStrings[" .. networkStringIndex .. "])")
+		end
 	end
+
+	if liro.config.doModuleLoadMessages then
+		print("//////////////////////////////")
+		print("//          Liro            //")
+		print("//  A modular gamemode base //")
+		if next(liro.loadedModules) then
+			print("//////////////////////////////")
+			print("// Loaded module(s):        //")
+			for _, moduleData in pairs(liro.loadedModules) do
+				print("// Module: \"" .. moduleData.folderName .. "\"")
+			end
+		end
+		if next(liro.unloadedDisabledModules) then
+			print("//////////////////////////////")
+			print("// Disabled module(s):      //")
+			for _, moduleData in pairs(liro.unloadedDisabledModules) do
+				print("// Module: \"" .. moduleData.folderName .. "\"")
+			end
+		end
+		print("//////////////////////////////")
+		print("// Disabled: " .. table.Count(liro.unloadedDisabledModules) .. " | Enabled: " .. table.Count(liro.loadedModules))
+		print("//////////////////////////////")
+	end
+
+	liro.activateDeveloperHook("liro.successfullyLoadedModules")
 end
 
--- Initial condition to start the load module process
-if liro.config.enableModules then
-	-- If developer hooks are enabled then call liro.attemptLoadModules
-	if liro.config.enableDeveloperHooks then hook.Call("liro.attemptLoadModules") end
+hook.Add("liro.registerModule", "loadModuleHook", function(moduleData)
+	local tableModuleData = util.JSONToTable(moduleData)
+	if not liro.moduleIntegrity(tableModuleData) then
+		print("A module has failed to load as it is missing values within it's registermodule.lua file")
+		return false
+	end
+	liro.toLoadModules[tableModuleData.folderName] = tableModuleData
 
-	-- Add all network strings
-	liro.loadNetworkStrings(liro.networkStrings)
+	if liro.countModules() == table.Count(liro.toLoadModules) then
+		liro.loadModules()
+	end
+end)
 
-	-- Attempt to load all the modules
-	liro.loadModules()
-end
+liro.initalizeModules()
