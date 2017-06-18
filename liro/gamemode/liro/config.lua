@@ -27,6 +27,7 @@ liro.config = {
 
 	-- Global prefixes that define the enviroment that the file will be loaded in.
 	-- These prefixes are overidden if the module specific load prefixes set in it's registermodule.lua
+	-- Note: It's recommended not to change these, for if the module authors don't specify per module prefixes and expect 'sv_', 'cl_' and 'sh_' to be used
 	moduleLoadPrefixes = {
 		server = "sv_",
 		client = "cl_",
