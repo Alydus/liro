@@ -93,8 +93,8 @@ end
 -- liro.loadModules()
 -- Loads the files within the module in order of load priority and outputs to console status
 function liro.loadModules()
-	table.sort(liro.toLoadModules, function(a, b)
-		return tonumber(a["loadPriority"]) > tonumber(b["loadPriority"])
+	table.sort(liro.toLoadModules, function(module1, module2)
+		return tonumber(module1["loadPriority"]) > tonumber(module2["loadPriority"])
 	end)
 
 	liro.activateDeveloperHook("liro.attemptLoadModules")
@@ -156,14 +156,18 @@ function liro.loadModules()
 			print("//////////////////////////////")
 			print("// Loaded module(s):        //")
 			for _, moduleData in pairs(liro.loadedModules) do
-				print("// Module: \"" .. moduleData.folderName .. "\"")
+				if liro.moduleIntegrity(moduleData) then
+					print("// Module: \"" .. moduleData.folderName .. "\" by \"" .. moduleData.author .. "\"")
+				end
 			end
 		end
 		if next(liro.unloadedDisabledModules) then
 			print("//////////////////////////////")
 			print("// Disabled module(s):      //")
 			for _, moduleData in pairs(liro.unloadedDisabledModules) do
-				print("// Module: \"" .. moduleData.folderName .. "\"")
+				if liro.moduleIntegrity(moduleData)
+					print("// Module: \"" .. moduleData.folderName .. "\" by \"" .. moduleData.author .. "\"")
+				end
 			end
 		end
 		print("//////////////////////////////")
