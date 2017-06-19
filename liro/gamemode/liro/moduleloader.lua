@@ -150,7 +150,7 @@ function liro.loadModules()
 
 	if liro.config.doModuleLoadMessages then
 		print("//////////////////////////////")
-		print("//         *Liro*           //")
+		print("//        * Liro *          //")
 		print("//  A modular gamemode base //")
 		if next(liro.loadedModules) then
 			print("//////////////////////////////")
@@ -177,7 +177,11 @@ end
 hook.Add("liro.registerModule", "loadModuleHook", function(moduleData)
 	local tableModuleData = util.JSONToTable(moduleData)
 	if not liro.moduleIntegrity(tableModuleData) then
-		print("A module has failed to load as it is missing required value(s) (metadata) within it's registermodule.lua file")
+		if tableModuleData.folderName then
+			print("A module (" .. tableModuleData.folderName .. ") has failed to load as it is missing required value(s) within JSON metadata (registermodule.lua)")
+		else
+			print("A module (" .. tableModuleData.folderName .. ") has failed to load as it is missing required value(s) within JSON metadata (registermodule.lua)")
+		end
 		return false
 	end
 	liro.toLoadModules[tableModuleData.folderName] = tableModuleData
