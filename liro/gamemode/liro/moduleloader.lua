@@ -165,7 +165,7 @@ function liro.loadModules()
 			print("//////////////////////////////")
 			print("// Disabled module(s):      //")
 			for _, moduleData in pairs(liro.unloadedDisabledModules) do
-				if liro.moduleIntegrity(moduleData)
+				if liro.moduleIntegrity(moduleData) then
 					print("// Module: \"" .. moduleData.folderName .. "\" by \"" .. moduleData.author .. "\"")
 				end
 			end
