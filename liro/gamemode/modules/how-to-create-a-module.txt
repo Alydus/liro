@@ -1,0 +1,6 @@
+* How to create a module
+
+1. Create a folder within 'modules' directory with your modulename. The name may contain no spaces, and preferably no special characters or uppercase characters.
+2. Copy the registermodule.lua from here https://github.com/Alydus/liro/blob/master/liro/gamemode/modules/examplemodule/registermodule.lua and put it into your module folder.
+3. Configure the metadata within registermodule.lua (Required: folderName, loadPriority, author, description, website, version - Optional: networkStrings, loadPrefixes)
+4. It's recommended to - TODO
