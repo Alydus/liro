@@ -28,6 +28,10 @@ liro.config = {
 
 	-- Disable any modules? (e.g. "moduleName", "")
 	disabledModuleNames = {},
+	
+	-- Blacklisted Files (stops files from loading) (e.g. "fileName", "")
+	-- This works recursively (within folders of the module)
+	globalBlacklistedFiles = {},
 
 	-- Global prefixes that define the enviroment that the file will be loaded in.
 	-- These prefixes are overidden if the module specific load prefixes set in it's registermodule.lua
