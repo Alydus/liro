@@ -17,7 +17,7 @@ function liro.recursiveInclusion(moduleData, folderPath)
 	for _, fileToLoad in pairs(folderFiles) do
 		local relativePath = folderPath .. "/" .. fileToLoad
 
-		if string.lower(fileToLoad) != string.lower(liro.config.registerFileName) then
+		if string.lower(fileToLoad) != string.lower(liro.config.registerFileName) or not table.HasValue(liro.config.globalBlacklistedFiles, fileToLoad) then
 			if moduleData.loadPrefixes != nil or not moduleData.loadPrefixes then
 				serverLoadPrefix = moduleData.loadPrefixes.server
 				clientLoadPrefix = moduleData.loadPrefixes.client
