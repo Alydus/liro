@@ -184,7 +184,7 @@ hook.Add("liro.registerModule", "loadModuleHook", function(moduleData)
 		if tableModuleData.folderName then
 			print("A module (" .. tableModuleData.folderName .. ") has failed to load as it is missing required value(s) within JSON metadata (registermodule.lua)")
 		else
-			print("A module (" .. tableModuleData.folderName .. ") has failed to load as it is missing required value(s) within JSON metadata (registermodule.lua)")
+			print("A module with an unknown name has failed to load as it is missing required value(s) within JSON metadata (registermodule.lua)")
 		end
 		return false
 	end
