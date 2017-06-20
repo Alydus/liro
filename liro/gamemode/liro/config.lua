@@ -12,7 +12,7 @@ liro.config = {
 
 	-- Enable developer hooks for liro events?
 	enableDeveloperHooks = true,
-          
+        
 	-- Enable AddNetworkString table?
 	enableNetworkStrings = true,
 
@@ -23,7 +23,9 @@ liro.config = {
 	-- Include your network strings in here and they will be util.AddNetworkString'd before module initalization. (e.g. "networkString", "")
 	-- This will only work if enableNetworkStrings is set to true.
 	-- Modules may also contain network strings.
+	
 	-- Note that util.AddNetworkString only supports 2048 networkStrings.
+	-- http://wiki.garrysmod.com/page/util/AddNetworkString
 	networkStrings = {},
 
 	-- Disable any modules? (e.g. "moduleName", "")
