@@ -7,6 +7,7 @@ liro.networkStrings = {}
 -- Recursively includes a folder's files & folders by calling its self upon it's subdirectories
 function liro.recursiveInclusion(moduleData, folderPath)
 	local moduleName = moduleData.folderName
+	local blacklistedFiles = moduleData.blacklistedFiles
 
 	local folderFiles, folderDirectories = file.Find(folderPath .. "/*", "LUA")
 
@@ -17,7 +18,7 @@ function liro.recursiveInclusion(moduleData, folderPath)
 	for _, fileToLoad in pairs(folderFiles) do
 		local relativePath = folderPath .. "/" .. fileToLoad
 
-		if string.lower(fileToLoad) != string.lower(liro.config.registerFileName) or not table.HasValue(liro.config.globalBlacklistedFiles, fileToLoad) then
+		if string.lower(fileToLoad) != string.lower(liro.config.registerFileName) or not table.HasValue(liro.config.globalBlacklistedFiles, fileToLoad) or not table.HasValue(blacklistedFiles, fileToLoad) then
 			if moduleData.loadPrefixes != nil or not moduleData.loadPrefixes then
 				serverLoadPrefix = moduleData.loadPrefixes.server
 				clientLoadPrefix = moduleData.loadPrefixes.client
