@@ -16,6 +16,10 @@ liro.config = {
 	-- Enable AddNetworkString table?
 	enableNetworkStrings = true,
 
+	-- Register module file name
+	-- It's recommended to NOT change this (developer reasons only)
+	registerFileName = "registermodule.lua",
+
 	-- Include your network strings in here and they will be util.AddNetworkString'd before module initalization. (e.g. "networkString", "")
 	-- This will only work if enableNetworkStrings is set to true.
 	-- Modules may also contain network strings.

@@ -17,7 +17,7 @@ function liro.recursiveInclusion(moduleData, folderPath)
 	for _, fileToLoad in pairs(folderFiles) do
 		local relativePath = folderPath .. "/" .. fileToLoad
 
-		if fileToLoad != "registermodule.lua" then
+		if string.lower(fileToLoad) != string.lower(liro.config.registerFileName) then
 			if moduleData.loadPrefixes != nil or not moduleData.loadPrefixes then
 				serverLoadPrefix = moduleData.loadPrefixes.server
 				clientLoadPrefix = moduleData.loadPrefixes.client
@@ -80,9 +80,9 @@ function liro.initalizeModules()
 	local _, moduleDirectories = file.Find(moduleFoldersPath .. "/*", "LUA")
 
 	for _, moduleName in pairs(moduleDirectories) do
-		if file.Exists(moduleFoldersPath .. "/" .. moduleName .. "/registermodule.lua", "LUA") then
-			AddCSLuaFile(moduleFoldersPath .. "/" .. moduleName .. "/registermodule.lua")
-			include(moduleFoldersPath .. "/" .. moduleName .. "/registermodule.lua")
+		if file.Exists(moduleFoldersPath .. "/" .. moduleName .. "/" .. string.lower(liro.config.registerFileName), "LUA") then
+			AddCSLuaFile(moduleFoldersPath .. "/" .. moduleName .. "/" .. string.lower(liro.config.registerFileName))
+			include(moduleFoldersPath .. "/" .. moduleName .. "/" .. string.lower(liro.config.registerFileName))
 		else
 			print("A liro module is missing a registermodule.lua")
 			print("Check the documentation on how to add one")
