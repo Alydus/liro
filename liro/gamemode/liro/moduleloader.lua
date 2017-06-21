@@ -20,13 +20,13 @@ function liro.recursiveInclusion(moduleData, folderPath)
 
 		if string.lower(fileToLoad) != string.lower(liro.config.registerFileName) or not table.HasValue(liro.config.globalBlacklistedFiles, fileToLoad) or not table.HasValue(blacklistedFiles, fileToLoad) then
 			if moduleData.loadPrefixes != nil or not moduleData.loadPrefixes then
-				serverLoadPrefix = moduleData.loadPrefixes.server
-				clientLoadPrefix = moduleData.loadPrefixes.client
-				sharedLoadPrefix = moduleData.loadPrefixes.shared
+				serverLoadPrefix = string.lower(moduleData.loadPrefixes.server)
+				clientLoadPrefix = string.lower(moduleData.loadPrefixes.client)
+				sharedLoadPrefix = string.lower(moduleData.loadPrefixes.shared)
 			else
-				serverLoadPrefix = liro.config.moduleLoadPrefixes.server
-				clientLoadPrefix = liro.config.moduleLoadPrefixes.client
-				sharedLoadPrefix = liro.config.moduleLoadPrefixes.shared
+				serverLoadPrefix = string.lower(liro.config.moduleLoadPrefixes.server)
+				clientLoadPrefix = string.lower(liro.config.moduleLoadPrefixes.client)
+				sharedLoadPrefix = string.lower(liro.config.moduleLoadPrefixes.shared)
 			end
 
 			if string.match( fileToLoad, "^" .. serverLoadPrefix) then
@@ -127,6 +127,7 @@ function liro.loadModules()
 					end
 				end
 			end
+			
 			liro.activateDeveloperHook("liro.attemptLoad" .. moduleData.folderName)
 
 			liro.recursiveInclusion(moduleData, gamemodeFolderName .. "/gamemode/modules")
@@ -181,6 +182,7 @@ end
 
 hook.Add("liro.registerModule", "loadModuleHook", function(moduleData)
 	local tableModuleData = util.JSONToTable(moduleData)
+		
 	if not liro.moduleIntegrity(tableModuleData) then
 		if tableModuleData.folderName then
 			print("A module (" .. tableModuleData.folderName .. ") has failed to load as it is missing required value(s) within JSON metadata (registermodule.lua)")
@@ -189,6 +191,7 @@ hook.Add("liro.registerModule", "loadModuleHook", function(moduleData)
 		end
 		return false
 	end
+		
 	liro.toLoadModules[tableModuleData.folderName] = tableModuleData
 
 	if liro.countModules() == table.Count(liro.toLoadModules) then
