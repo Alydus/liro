@@ -25,3 +25,10 @@ function liro.moduleIntegrity(md)
 	end
 	return true
 end
+
+-- liro.isModuleLoaded(moduleName)
+function liro.isModuleLoaded(moduleName)
+	if moduleName != "" then
+		return liro.loadedModules[moduleName]
+	end
+end
