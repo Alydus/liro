@@ -151,30 +151,45 @@ function liro.loadModules()
 	end
 
 	if liro.config.doModuleLoadMessages then
-		print("//////////////////////////////")
-		print("//        * Liro *          //")
-		print("//  A modular gamemode base //")
-		if next(liro.loadedModules) then
-			print("//////////////////////////////")
-			print("// Loaded module(s):        //")
-			for _, moduleData in pairs(liro.loadedModules) do
-				if liro.moduleIntegrity(moduleData) then
-					print("// Module: \"" .. moduleData.folderName .. "\" by \"" .. moduleData.author .. "\"")
-				end
+		http.Fetch( "https://api.github.com/repos/Alydus/liro/releases/latest", function( body, len, headers, code )
+				if not liro.isEmpty(body) then
+					local json = util.JSONToTable(body)
+					local latestVersion = tostring(json.tag_name);
+					latestVersion = string.gsub(latestVersion, "V", "")
+					
+					print("/////////////////////////////////////////")
+					print("//             / Liro V" .. GAMEMODE.Version .. " /           //")
+					print("//               OS: " .. liro.getSystemOS() .. "             //")
+					print("/////////////////////////////////////////")
+					print("//     Post-Initialization Complete    //")
+					print("//          Latest Version: " .. latestVersion .. "        //")
+					if next(liro.loadedModules) then
+						print("/////////////////////////////////////////")
+						print("// Loaded module(s):                   //")
+						for moduleLoadedOrderKey, moduleData in pairs(liro.loadedModules) do
+							if liro.moduleIntegrity(moduleData) then
+								print("// Module: \"" .. moduleData.folderName .. "\" by \"" .. moduleData.author .. "\"")
+							end
+						end
+					end
+					if next(liro.unloadedDisabledModules) then
+						print("/////////////////////////////////////////")
+						print("// Disabled module(s):      //")
+						for _, moduleData in pairs(liro.unloadedDisabledModules) do
+							if liro.moduleIntegrity(moduleData) then
+								print("// Module: \"" .. moduleData.folderName .. "\" by \"" .. moduleData.author .. "\"")
+							end
+						end
+					end
+					print("/////////////////////////////////////////")
+					print("// Disabled: " .. table.Count(liro.unloadedDisabledModules) .. " | Enabled: " .. table.Count(liro.loadedModules))
+					print("/////////////////////////////////////////")
 			end
-		end
-		if next(liro.unloadedDisabledModules) then
-			print("//////////////////////////////")
-			print("// Disabled module(s):      //")
-			for _, moduleData in pairs(liro.unloadedDisabledModules) do
-				if liro.moduleIntegrity(moduleData) then
-					print("// Module: \"" .. moduleData.folderName .. "\" by \"" .. moduleData.author .. "\"")
-				end
-			end
-		end
-		print("//////////////////////////////")
-		print("// Disabled: " .. table.Count(liro.unloadedDisabledModules) .. " | Enabled: " .. table.Count(liro.loadedModules))
-		print("//////////////////////////////")
+		end)
+	end
+
+	if system.IsLinux() and liro.config.doLinuxUppercasePathWarning then
+		print("Liro is running on Linux, module(s) and/or uppercase file name paths will cause issues, same with spaces/tabs.")
 	end
 
 	liro.activateDeveloperHook("liro.successfullyLoadedModules")

@@ -16,6 +16,9 @@ liro.config = {
 	-- Enable AddNetworkString table?
 	enableNetworkStrings = true,
 
+	-- Enable a Linux Uppercase Path Warning on post initialization?
+	doLinuxUppercasePathWarning = true,
+
 	-- Register module file name
 	-- It's recommended to NOT change this (developer reasons only)
 	registerFileName = "registermodule.lua",

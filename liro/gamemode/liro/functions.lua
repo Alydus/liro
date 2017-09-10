@@ -27,6 +27,20 @@ function liro.moduleIntegrity(md)
 	return true
 end
 
+-- liro.getSystemOS()
+-- Returns the OS String
+function liro.getSystemOS()
+	if system.IsOSX() then
+		return "OSX"
+	elseif system.IsWindows() then
+		return "Windows"
+	elseif system.IsLinux() then
+		return "Linux"
+	else
+		return false
+	end
+end
+
 -- liro.isModuleLoaded(module)
 -- Returns if the provided module name/data is loaded
 function liro.isModuleLoaded(module)
