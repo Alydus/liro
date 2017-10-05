@@ -44,7 +44,7 @@ end
 -- liro.isModuleLoaded(module)
 -- Returns if the provided module name/data is loaded
 function liro.isModuleLoaded(module)
-	if moduleName != "" then
+	if module != "" then
 		if istable(module) then
 			if liro.moduleIntegrity(module) then
 				return liro.loadedModules[module.folderName]
@@ -52,7 +52,7 @@ function liro.isModuleLoaded(module)
 				return false	
 			end
 		else
-			return liro.loadedModules[moduleName]
+			return liro.loadedModules[module]
 		end
 	end
 end
