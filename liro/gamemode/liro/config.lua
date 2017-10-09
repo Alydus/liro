@@ -19,6 +19,9 @@ liro.config = {
 	-- Enable a Linux Uppercase Path Warning on post initialization?
 	doLinuxUppercasePathWarning = true,
 
+	-- Enable outdated Liro version on post initialization?
+	doOutdatedWarning = true,
+
 	-- Register module file name
 	-- It's recommended to NOT change this (developer reasons only)
 	-- Changing this may make modules cease to load due to their lack of register file

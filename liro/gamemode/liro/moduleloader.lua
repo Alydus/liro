@@ -164,6 +164,11 @@ function liro.loadModules()
 					local json = util.JSONToTable(body)
 					local latestVersion = tostring(json.tag_name);
 					latestVersion = string.gsub(latestVersion, "V", "")
+
+					-- Outdated Liro version warning
+					if liro.config.doOutdatedWarning and tonumber(latestVersion) > tonumber(GAMEMODE.Version) then
+						print("Liro is outdated, updating is recommended. (Running V" .. GAMEMODE.Version .. ", Latest is " .. latestVersion .. ")")
+					end
 					
 					print("/////////////////////////////////////////")
 					print("//             / Liro V" .. GAMEMODE.Version .. " /           //")
