@@ -21,6 +21,7 @@ liro.config = {
 
 	-- Register module file name
 	-- It's recommended to NOT change this (developer reasons only)
+	-- Changing this may make modules cease to load due to their lack of register file
 	registerFileName = "registermodule.lua",
 
 	-- Include your network strings in here and they will be util.AddNetworkString'd before module initalization. (e.g. "networkString", "")

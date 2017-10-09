@@ -2,7 +2,7 @@
 
 -- Declare gamemode information
 GM.Name = "Liro"
-GM.Author = ""
+GM.Author = "Various Contributors"
 GM.Email = ""
-GM.Website = ""
-GM.Version = "1.3"
+GM.Website = "https://github.com/Alydus/liro"
+GM.Version = "1.4"
