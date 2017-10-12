@@ -12,58 +12,50 @@ liro.config = {
 
 	-- Enable developer hooks for liro events?
 	enableDeveloperHooks = true,
-
+        
 	-- Enable AddNetworkString table?
 	enableNetworkStrings = true,
 
+	-- Enable a Linux Uppercase Path Warning on post initialization?
+	doLinuxUppercasePathWarning = true,
+	
+	-- Enable a warning for LUA auto refresh on gamemode re-initialization
+	doAutoRefreshWarning = true,
+	
+	-- Enable adding "DSB_" to the beginning of a moduleFolderName to disable it
+	doQuickDisableModulePrefix = true,
+
+	-- Enable outdated Liro version on post initialization?
+	doOutdatedWarning = true,
+
+	-- Register module file name
+	-- It's recommended to NOT change this (developer reasons only)
+	-- Changing this may make modules cease to load due to their lack of register file
+	registerFileName = "registermodule.lua",
+
 	-- Include your network strings in here and they will be util.AddNetworkString'd before module initalization. (e.g. "networkString", "")
 	-- This will only work if enableNetworkStrings is set to true.
+	-- Modules may also contain network strings.
+	
 	-- Note that util.AddNetworkString only supports 2048 networkStrings.
+	-- http://wiki.garrysmod.com/page/util/AddNetworkString
 	networkStrings = {},
 
 	-- Disable any modules? (e.g. "moduleName", "")
-	disabledModules = {},
+	disabledModuleNames = {},
+	
+	-- Blacklisted Files (stops files from loading) (e.g. "fileName", "")
+	-- This works recursively (within folders of the module)
+	globalBlacklistedFiles = {},
 
 	-- Global prefixes that define the enviroment that the file will be loaded in.
-	-- These prefixes are overidden if the module has a perModuleLoadPrefix set.
+	-- These prefixes are overidden if the module specific load prefixes set in it's registermodule.lua
+	-- Note: It's recommended not to change these, for if the module authors don't specify per module prefixes and expect 'sv_', 'cl_' and 'sh_' to be used
 	moduleLoadPrefixes = {
 		server = "sv_",
 		client = "cl_",
 		shared = "sh_"
-	},
-  
-	-- When installing a module, you should be informed if the module has specific load prefixes.
-	-- If so, define them in perModuleLoadPrefixes.
-
-  	perModuleLoadPrefixes = {
-		--[[simpledebug = {
-    			server = "sv_",
-			client = "cl_",
-			shared = "sh_"
-      		}--]]
-	},
+	}
 }
 
---[[-------------------------------------------------------------------------
-Developer Hooks
------------------------------------------------------------------------------
-	All of the following hooks are shared (avaliable on all enviroments)
-
-	-- Attempt hooks
-	liro.attemptLoadModules - Called when liro attempts to load all of the modules
-	liro.attemptLoad(MODULENAME) - Called when the specified module attempts to load
-	liro.attemptCountModules - Called when liro attempts to count all the modules
-
-	-- Success hooks
-	liro.successfullyCountModules - Called when liro successfully loads all the modules
-	liro.successfullyLoaded(MODULENAME) - Called when the specified module attempts to load
-	liro.successfullyLoadedModules - Called when liro has successfully loaded all modules
---]]
-
---[[-------------------------------------------------------------------------
-Developer Functions
------------------------------------------------------------------------------
-	All of the following hooks are shared (avaliable on all enviroments)
-
-	liro.pullLoadedModules() - Returns the currently loaded module names in a table
---]]
+-- See the facepunch thread for a list of developer hooks

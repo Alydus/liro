@@ -1,5 +1,7 @@
 -- Liro - init.lua
 
+local startTime = os.clock()
+
 -- Include dependant files
 include("shared.lua")
 AddCSLuaFile("cl_init.lua")
@@ -12,6 +14,11 @@ liro = liro or {}
 include("liro/config.lua")
 AddCSLuaFile("liro/config.lua")
 
+-- LUA Autorefresh Warning
+if liro and liro.config.doAutoRefreshWarning then
+  print("Change has been detected, Liro will now re-initialize...")
+end
+
 -- Include functions
 include("liro/functions.lua")
 AddCSLuaFile("liro/functions.lua")
@@ -19,3 +26,7 @@ AddCSLuaFile("liro/functions.lua")
 -- Include module loader
 include("liro/moduleloader.lua")
 AddCSLuaFile("liro/moduleloader.lua")
+
+if liro and liro.config.doAutoRefreshWarning and startTime then
+    print("LUA Autorefresh; Liro re-initialization finished in " .. math.Round(os.clock() - startTime, 3) .. " seconds.")
+end
