@@ -12,6 +12,11 @@ liro = liro or {}
 include("liro/config.lua")
 AddCSLuaFile("liro/config.lua")
 
+-- LUA Autorefresh Warning
+if liro and liro.config.autoRefreshWarning then
+  print("Change has been detected, Liro will now re-initialize.")
+end
+
 -- Include functions
 include("liro/functions.lua")
 AddCSLuaFile("liro/functions.lua")
