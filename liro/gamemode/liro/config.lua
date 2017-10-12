@@ -18,6 +18,9 @@ liro.config = {
 
 	-- Enable a Linux Uppercase Path Warning on post initialization?
 	doLinuxUppercasePathWarning = true,
+	
+	-- Enable a warning for LUA auto refresh on gamemode re-initialization
+	doAutoRefreshWarning = true,
 
 	-- Enable outdated Liro version on post initialization?
 	doOutdatedWarning = true,
