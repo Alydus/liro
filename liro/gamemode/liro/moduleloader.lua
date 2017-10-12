@@ -122,6 +122,8 @@ function liro.loadModules()
 		local moduleName = moduleData.folderName
 
 		if not table.HasValue(liro.config.disabledModuleNames, moduleName) then
+			
+			if not (liro.config.doQuickDisableModulePrefix and (string.sub(moduleName, 1, 4) == DSB_)) then
 
 			if liro.loadedModules[moduleName] then
 				print("Liro has failed to fully load")
