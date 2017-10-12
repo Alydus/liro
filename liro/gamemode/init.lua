@@ -13,7 +13,7 @@ include("liro/config.lua")
 AddCSLuaFile("liro/config.lua")
 
 -- LUA Autorefresh Warning
-if liro and liro.config.autoRefreshWarning then
+if liro and liro.config.doAutoRefreshWarning then
   print("Change has been detected, Liro will now re-initialize.")
 end
 
