@@ -21,6 +21,9 @@ liro.config = {
 	
 	-- Enable a warning for LUA auto refresh on gamemode re-initialization
 	doAutoRefreshWarning = true,
+	
+	-- Enable adding "DSB_" to the beginning of a moduleFolderName to disable it
+	doQuickDisableModulePrefix = true,
 
 	-- Enable outdated Liro version on post initialization?
 	doOutdatedWarning = true,
