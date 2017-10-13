@@ -77,6 +77,32 @@ function liro.countModules(doDisabled)
 	return moduleCount
 end
 
+-- liro.countValidModules()
+-- Returns the amount of modules in the modules folder with checking
+function liro.countValidModules(doDisabled)
+	liro.activateDeveloperHook("liro.attemptCountValidModules")
+
+	local moduleCount = 0
+
+	local _, moduleFolders = file.Find(gamemodeFolderName .. "/gamemode/modules/*", "LUA")
+
+	for _, moduleFolder in pairs(moduleFolders) do
+		if not doDisabled or doDisabled == nil then
+			if liro.moduleIntegrity(liro.loadedModules[moduleFolder]) then
+				moduleCount = moduleCount + 1
+			end
+		else
+			if table.HasValue(liro.config.disabledModuleNames, moduleFolder) and liro.moduleIntegrity(liro.loadedModules[moduleFolder]) then
+				moduleCount = moduleCount + 1
+			end
+		end
+	end
+
+	liro.activateDeveloperHook("liro.successfullyCountValidModules")
+
+	return moduleCount
+end
+
 -- liro.initalizeModules()
 -- Loads the registermodule file in each module
 function liro.initalizeModules()
