@@ -169,7 +169,7 @@ function liro.loadModules()
 				latestVersion = string.gsub(latestVersion, "V", "")
 
 					-- Outdated Liro version warning
-					if liro.config.doOutdatedWarning and latestVersion and tonumber(latestVersion) > tonumber(GAMEMODE.Version) then
+					if liro.config.doOutdatedWarning and latestVersion != "" and tonumber(latestVersion) > tonumber(GAMEMODE.Version) then
 						print("Liro is outdated, updating is recommended. (Running V" .. GAMEMODE.Version .. ", Latest is " .. latestVersion .. ")")
 					end
 					
@@ -178,7 +178,6 @@ function liro.loadModules()
 					print("//               OS: " .. liro.getSystemOS() .. "             //")
 					print("/////////////////////////////////////////")
 					print("//     Post-Initialization Complete    //")
-					print("//          Latest Version: " .. latestVersion .. "        //")
 					if next(liro.loadedModules) then
 						print("/////////////////////////////////////////")
 						print("// Loaded module(s):                   //")
