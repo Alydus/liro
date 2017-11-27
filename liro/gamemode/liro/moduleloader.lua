@@ -38,20 +38,20 @@ function liro.recursiveInclusion(moduleData, folderPath)
 				if SERVER then
 					include(relativePath)
 				end
-				elseif string.match( fileToLoad, "^" .. sharedLoadPrefix) then
+			elseif string.match( fileToLoad, "^" .. sharedLoadPrefix) then
+				include(relativePath)
+				if SERVER then
+					AddCSLuaFile(relativePath)
+				end
+			elseif string.match( fileToLoad, "^" .. clientLoadPrefix) then
+				AddCSLuaFile(relativePath)
+				if CLIENT then
 					include(relativePath)
-					if SERVER then
-						AddCSLuaFile(relativePath)
-					end
-					elseif string.match( fileToLoad, "^" .. clientLoadPrefix) then
-						AddCSLuaFile(relativePath)
-						if CLIENT then
-							include(relativePath)
-						end
-					end
+				end
 				end
 			end
 		end
+	end
 
 -- liro.countModules()
 -- Returns the amount of modules in the modules folder with no checking
@@ -90,7 +90,9 @@ function liro.initalizeModules()
 			AddCSLuaFile(moduleFoldersPath .. "/" .. moduleName .. "/" .. string.lower(liro.config.registerFileName))
 			include(moduleFoldersPath .. "/" .. moduleName .. "/" .. string.lower(liro.config.registerFileName))
 		else
-			print("A liro module is missing a registermodule.lua, obtain an example from liro source on github")
+			if not string.sub(moduleName, 1, 4) == "DSB_" then
+				liro.diagnosticPrint("A Liro module is missing a registermodule.lua, obtain an example from Liro source on github")
+			end
 		end
 	end
 end
@@ -104,14 +106,14 @@ function liro.loadModules()
 			table.insert(liro.networkStrings, networkString)
 			util.AddNetworkString(networkString)
 		else
-			print("Liro detected a empty network string in the config (liro.config.networkStrings[" .. networkStringIndex .. "])")
+			liro.diagnosticPrint("Liro detected a empty network string in the config (liro.config.networkStrings[" .. networkStringIndex .. "])")
 		end
 	end
 
 	-- Sort modules in order of loadPriority, taken from module data
 	table.sort(liro.toLoadModules, function(module1, module2)
 		return tonumber(module1["loadPriority"]) > tonumber(module2["loadPriority"])
-		end)
+	end)
 
 	liro.activateDeveloperHook("liro.attemptLoadModules")
 
@@ -123,24 +125,21 @@ function liro.loadModules()
 
 		if not table.HasValue(liro.config.disabledModuleNames, moduleName) then
 			
-			if not (liro.config.doQuickDisableModulePrefix and (string.sub(moduleName, 1, 4) == DSB_)) then
+			if not (liro.config.doQuickDisableModulePrefix and (string.sub(moduleName, 1, 4) == "DSB_")) then
 
 				if liro.loadedModules[moduleName] then
-					print("Liro has failed to fully load")
-					print("Two modules have the same folder name")
+					liro.diagnosticPrint("Liro has failed to fully load, two modules have the same folder name")
 
 					return false
 				end
 
-				if SERVER then
-					if moduleData.networkStrings and moduleData.networkStrings[1] then
-						for _, networkString in pairs(moduleData.networkStrings) do
-							if networkString != "" then
-								table.insert(liro.networkStrings, networkString)
-								util.AddNetworkString(networkString)
-							else
-								print("Liro detected a empty network string in module '" .. moduleData.folderName .. "'")
-							end
+				if SERVER and moduleData.networkStrings and moduleData.networkStrings[1] then
+					for _, networkString in pairs(moduleData.networkStrings) do
+						if networkString != "" then
+							table.insert(liro.networkStrings, networkString)
+							util.AddNetworkString(networkString)
+						else
+							liro.diagnosticPrint("Liro detected a empty network string in module '" .. moduleData.folderName .. "'")
 						end
 					end
 				end
@@ -162,50 +161,65 @@ function liro.loadModules()
 	-- Console Output
 	if liro.config.doModuleLoadMessages then
 		-- Version Checker
-		http.Fetch( "https://api.github.com/repos/Alydus/liro/releases/latest", function( body, len, headers, code )
+		http.Fetch("https://api.github.com/repos/Alydus/liro/releases/latest", function(body, len, headers, code)
 			if not liro.isEmpty(body) then
 				local json = util.JSONToTable(body)
-				local latestVersion = tostring(json.tag_name);
+				local latestVersion = tostring(json.tag_name)
 				latestVersion = string.gsub(latestVersion, "V", "")
 
-					-- Outdated Liro version warning
-					if liro.config.doOutdatedWarning and latestVersion != "" and tonumber(latestVersion) > tonumber(GAMEMODE.Version) then
-						print("Liro is outdated, updating is recommended. (Running V" .. GAMEMODE.Version .. ", Latest is " .. latestVersion .. ")")
-					end
-					
-					print("/////////////////////////////////////////")
-					print("//             / Liro V" .. GAMEMODE.Version .. " /           //")
-					print("//               OS: " .. liro.getSystemOS() .. "             //")
-					print("/////////////////////////////////////////")
-					print("//     Post-Initialization Complete    //")
-					if next(liro.loadedModules) then
-						print("/////////////////////////////////////////")
-						print("// Loaded module(s):                   //")
-						for moduleLoadedOrderKey, moduleData in pairs(liro.loadedModules) do
-							if liro.moduleIntegrity(moduleData) then
-								print("// Module: \"" .. moduleData.folderName .. "\" by \"" .. moduleData.author .. "\"")
-							end
-						end
-					end
-					if next(liro.unloadedDisabledModules) then
-						print("/////////////////////////////////////////")
-						print("// Disabled module(s):      //")
-						for _, moduleData in pairs(liro.unloadedDisabledModules) do
-							if liro.moduleIntegrity(moduleData) then
-								print("// Module: \"" .. moduleData.folderName .. "\" by \"" .. moduleData.author .. "\"")
-							end
-						end
-					end
-					print("/////////////////////////////////////////")
-					print("// Disabled: " .. table.Count(liro.unloadedDisabledModules) .. " | Enabled: " .. table.Count(liro.loadedModules))
-					print("/////////////////////////////////////////")
+				-- Outdated Liro version warning
+				if liro.config.doOutdatedWarning and latestVersion != "" and tonumber(latestVersion) > tonumber(GAMEMODE.Version) and latestVersion and json then
+					liro.diagnosticPrint("Liro is outdated, updating is recommended. (Running V" .. GAMEMODE.Version .. ", Latest is " .. latestVersion .. ")")
 				end
-				end)
-	end
 
-	-- Linux System uppercase filenames/paths warning
-	if system.IsLinux() and liro.config.doLinuxUppercasePathWarning then
-		print("Liro is running on Linux, module(s) and/or uppercase file name paths will cause issues, same with spaces/tabs.")
+				-- Linux System uppercase filenames/paths warning
+				if system.IsLinux() and liro.config.doLinuxUppercasePathWarning then
+					liro.diagnosticPrint("Liro is running on Linux, module(s) and/or uppercase file name paths will cause issues, same with spaces/tabs.")
+				end
+
+				if SERVER or (CLIENT and liro.config.showConsoleLoadSequenceClientside) then
+
+					if SERVER or (CLIENT and liro.config.showConsoleLoadSequenceClientside and liro.config.showConsoleLoadSequenceRanksOnly and LocalPlayer() and LocalPlayer():GetUserGroup() and table.HasValue(liro.config.showConsoleLoadSequenceClientsideRanks, LocalPlayer():GetUserGroup())) then
+				
+						print("/////////////////////////////////////////")
+						print("//             / Liro V" .. GAMEMODE.Version .. " /           //")
+						print("//         / OS: " .. liro.getSystemOS() .. " / LT: " .. math.Round(os.clock() - liro.startTime, 3) .. "s /")
+						print("/////////////////////////////////////////")
+						print("//     Post-Initialization Complete    //")
+
+						if next(liro.loadedModules) then
+							print("/////////////////////////////////////////")
+							print("// Loaded module(s):                   //")
+							for moduleLoadedOrderKey, moduleData in pairs(liro.loadedModules) do
+								if liro.moduleIntegrity(moduleData) then
+									print("// Module: \"" .. moduleData.folderName .. "\" by \"" .. moduleData.author .. "\"")
+								end
+							end
+						end
+
+						if next(liro.unloadedDisabledModules) then
+							print("/////////////////////////////////////////")
+							print("// Disabled module(s):      //")
+							for _, moduleData in pairs(liro.unloadedDisabledModules) do
+								if liro.moduleIntegrity(moduleData) then
+									print("// Module: \"" .. moduleData.folderName .. "\" by \"" .. moduleData.author .. "\"")
+								end
+							end
+						end
+
+						print("/////////////////////////////////////////")
+						print("// Disabled: " .. table.Count(liro.unloadedDisabledModules) .. " | Enabled: " .. table.Count(liro.loadedModules))
+						print("/////////////////////////////////////////")
+					end
+				end
+
+				if CLIENT then
+					net.Start("liro.receiveClientInformation")
+					net.WriteString(util.TableToJSON({loadTime = math.Round(os.clock() - liro.startTime, 3), os = liro.getSystemOS(), country = system.GetCountry(), windowed = system.IsWindowed(), steamTime = system.SteamTime(), upTime = system.UpTime(), screenWidth = ScrW(), screenHeight = ScrH(), batteryPower = system.BatteryPower()}))
+					net.SendToServer()
+				end
+			end
+		end)
 	end
 
 	liro.activateDeveloperHook("liro.successfullyLoadedModules")
@@ -217,9 +231,9 @@ hook.Add("liro.registerModule", "loadModuleHook", function(moduleData)
 	-- Throw warning if module being registered has incomplete/invalid module data
 	if not liro.moduleIntegrity(tableModuleData) then
 		if tableModuleData.folderName then
-			print("A module (" .. tableModuleData.folderName .. ") has failed to load as it is missing required value(s) within JSON metadata (registermodule.lua)")
+			liro.diagnosticPrint("A module (" .. tableModuleData.folderName .. ") has failed to load as it is missing required value(s) within JSON metadata (registermodule.lua)")
 		else
-			print("A module with an unknown name has failed to load as it is missing required value(s) within JSON metadata (registermodule.lua)")
+			liro.diagnosticPrint("A module with an unknown name has failed to load as it is missing required value(s) within JSON metadata (registermodule.lua)")
 		end
 		return false
 	end
@@ -230,6 +244,6 @@ hook.Add("liro.registerModule", "loadModuleHook", function(moduleData)
 	if liro.countModules() == table.Count(liro.toLoadModules) then
 		liro.loadModules()
 	end
-	end)
+end)
 
 liro.initalizeModules()

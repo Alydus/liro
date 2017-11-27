@@ -3,6 +3,8 @@
 -- This is the main configuration file for the Liro gamemode base, it
 -- allows you to customize the boot of the gamemode.
 
+-- Setting a value to true will enable it's function, setting it to false will do the opposite.
+
 liro.config = {
 	-- Output basic module load information on gamemode initialization?
 	doModuleLoadMessages = true,
@@ -16,14 +18,26 @@ liro.config = {
 	-- Enable AddNetworkString table?
 	enableNetworkStrings = true,
 
+	-- Add serverside console message for post-initialized players, recommended to be enabled (includes detailed information like; country, screen resolution, steamid and more)
+	doPlayerInitializationMessage = true,
+
 	-- Enable a Linux Uppercase Path Warning on post initialization?
 	doLinuxUppercasePathWarning = true,
 	
-	-- Enable a warning for LUA auto refresh on gamemode re-initialization
-	doAutoRefreshWarning = true,
-	
 	-- Enable adding "DSB_" to the beginning of a moduleFolderName to disable it
 	doQuickDisableModulePrefix = true,
+
+	-- Show the module loading sequence in clientside console for clients (useful if you want make Liro usage more discreet)
+	showConsoleLoadSequenceClientside = true,
+
+	-- Show the module loading sequence in clientside console for clients with ranks defined in showConsoleLoadSequenceClientsideRanks
+	showConsoleLoadSequenceClientsideRanksOnly = true,
+
+	-- Ranks that will see module loading sequence in clientside console, works if only showConsoleLoadSequenceClientside/RanksOnly is true
+	showConsoleLoadSequenceClientsideRanks = {"superadmin", "admin"},
+
+	-- The prefix for printing using liro.diagnosticPrint(), recommened to have a space after the prefix
+	diagnosticPrintPrefix = "[LIRO] ",
 
 	-- Enable outdated Liro version on post initialization?
 	doOutdatedWarning = true,
@@ -33,7 +47,7 @@ liro.config = {
 	-- Changing this may make modules cease to load due to their lack of register file
 	registerFileName = "registermodule.lua",
 
-	-- Include your network strings in here and they will be util.AddNetworkString'd before module initalization. (e.g. "networkString", "")
+	-- Include your network strings in here and they will be util.AddNetworkString()'d before module initalization. (e.g. "networkString", "")
 	-- This will only work if enableNetworkStrings is set to true.
 	-- Modules may also contain network strings.
 	
@@ -59,3 +73,4 @@ liro.config = {
 }
 
 -- See the facepunch thread for a list of developer hooks
+-- https://gmod.facepunch.com/f/gmodaddon/jjfx/Liro-A-modular-gamemode-base/

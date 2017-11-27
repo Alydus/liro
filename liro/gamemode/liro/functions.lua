@@ -30,14 +30,18 @@ end
 -- liro.getSystemOS()
 -- Returns the OS String
 function liro.getSystemOS()
-	if system.IsOSX() then
-		return "OSX"
-	elseif system.IsWindows() then
-		return "Windows"
-	elseif system.IsLinux() then
-		return "Linux"
+	if jit.os != "Other" then
+		return jit.os
 	else
-		return false
+		return "Unknown"
+	end
+end
+
+function liro.formatBatteryPower(batteryPower)
+	if batteryPower == 255 or not batteryPower then
+		return "Plug"
+	else
+		return math.Round(batteryPower)
 	end
 end
 
@@ -54,5 +58,13 @@ function liro.isModuleLoaded(module)
 		else
 			return liro.loadedModules[module]
 		end
+	end
+end
+
+-- liro.diagnosticPrint(message)
+-- Prints a message with the liro prefix
+function liro.diagnosticPrint(message)
+	if message != "" and message then
+		print(liro.config.diagnosticPrintPrefix .. message)
 	end
 end

@@ -6,4 +6,4 @@
 4. Create any lua files within any folders in the module you create, containing any code and they will be loaded.
 
 It's recommended you read the facepunch thread for more information on developer hooks, e.g. running code when the entire module has been loaded (included).
-https://facepunch.com/showthread.php?t=1563899
+https://gmod.facepunch.com/f/gmodaddon/jjfx/Liro-A-modular-gamemode-base/
