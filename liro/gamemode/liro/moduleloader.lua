@@ -131,6 +131,9 @@ function liro.loadModules()
 			liro.diagnosticPrint("Liro detected a empty network string in the config (liro.config.networkStrings[" .. networkStringIndex .. "])")
 		end
 	end
+	
+	-- Load entities, after the global network strings so they can be used within entity files
+	liro.loadEntities()
 
 	-- Sort modules in order of loadPriority, taken from module data
 	table.sort(liro.toLoadModules, function(module1, module2)
