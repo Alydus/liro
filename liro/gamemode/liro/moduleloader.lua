@@ -97,6 +97,28 @@ function liro.initalizeModules()
 	end
 end
 
+-- liro.loadEntities()
+-- WIP Entity Loader for gamemode/entities/entities
+function liro.loadEntities()
+	local entityFoldersPath = gamemodeFolderName .. "/gamemode/entities/entities"
+	local entitys = file.Find(entityFoldersPath .. "/*", "LUA")
+	
+	for _, entityFolderName in pairs(entitys) do
+		if file.IsDir(entityFolderName) then
+			
+			-- Entity is in a folder structure, will attempt to load three different files
+			-- cl_init, shared.lua, init.lua in retrospective environments
+			liro.diagnosticPrint("Attempting to load entity '" .. entityFolderName .. "'")
+			
+		elseif string.Right(entityFolderName, 4) == ".lua" then
+			
+			-- Entity is a single lua file (probably shared, so will load it that way)
+			liro.diagnosticPrint("Attempting to load entity '" .. entityFolderName .. "'")
+			
+		end
+	end
+end
+
 -- liro.loadModules()
 -- Loads the files within the module in order of load priority and outputs to console status
 function liro.loadModules()
@@ -109,6 +131,9 @@ function liro.loadModules()
 			liro.diagnosticPrint("Liro detected a empty network string in the config (liro.config.networkStrings[" .. networkStringIndex .. "])")
 		end
 	end
+	
+	-- Load entities, after the global network strings so they can be used within entity files
+	liro.loadEntities()
 
 	-- Sort modules in order of loadPriority, taken from module data
 	table.sort(liro.toLoadModules, function(module1, module2)
