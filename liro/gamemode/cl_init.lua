@@ -3,6 +3,10 @@
 -- Include dependant files
 include("shared.lua")
 
+if liro then
+	hook.Call("Initialize", GAMEMODE)
+end
+
 -- Define base Liro data array
 liro = liro or {}
 

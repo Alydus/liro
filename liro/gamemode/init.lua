@@ -5,6 +5,10 @@ include("shared.lua")
 AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 
+if liro then
+	hook.Call("Initialize", GAMEMODE)
+end
+
 -- Define base Liro data array
 liro = liro or {}
 
@@ -22,9 +26,9 @@ AddCSLuaFile("liro/config.lua")
 include("liro/functions.lua")
 AddCSLuaFile("liro/functions.lua")
 
+-- Include data management
+include("liro/datamanagement.lua")
+
 -- Include module loader
 include("liro/moduleloader.lua")
 AddCSLuaFile("liro/moduleloader.lua")
-
--- Include data management
-include("liro/datamanagement.lua")

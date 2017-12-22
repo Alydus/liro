@@ -37,6 +37,25 @@ function liro.getSystemOS()
 	end
 end
 
+
+-- liro.mean(table)
+-- Returns the mean/average number in a table
+function liro.mean(t)
+	local sum = 0
+	local count= 0
+
+	for _, v in pairs(t) do
+		if type(v) == "number" then
+			sum = sum + v
+			count = count + 1
+		end
+	end
+
+	return sum / count
+end
+
+-- liro.formatBatteryPower(batteryPower)
+-- Returns formatted battery power, returns "Plug" if not on battery or plugged in
 function liro.formatBatteryPower(batteryPower)
 	if batteryPower == 255 or not batteryPower then
 		return "Plug"

@@ -23,6 +23,9 @@ liro.config = {
 
 	-- Enable a Linux Uppercase Path Warning on post initialization?
 	doLinuxUppercasePathWarning = true,
+
+	-- Show the average load time of every player that has joined when a player finishes loading Liro,
+	averageLoadTime = true,
 	
 	-- Enable adding "DSB_" to the beginning of a moduleFolderName to disable it
 	doQuickDisableModulePrefix = true,
@@ -31,7 +34,7 @@ liro.config = {
 	showConsoleLoadSequenceClientside = true,
 
 	-- Show the module loading sequence in clientside console for clients with ranks defined in showConsoleLoadSequenceClientsideRanks
-	showConsoleLoadSequenceClientsideRanksOnly = true,
+	showConsoleLoadSequenceClientsideRanksOnly = false,
 
 	-- Ranks that will see module loading sequence in clientside console, works if only showConsoleLoadSequenceClientside/RanksOnly is true
 	showConsoleLoadSequenceClientsideRanks = {"superadmin", "admin"},

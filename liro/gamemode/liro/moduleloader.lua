@@ -48,10 +48,10 @@ function liro.recursiveInclusion(moduleData, folderPath)
 				if CLIENT then
 					include(relativePath)
 				end
-				end
 			end
 		end
 	end
+end
 
 -- liro.countModules()
 -- Returns the amount of modules in the modules folder with no checking
@@ -97,26 +97,29 @@ function liro.initalizeModules()
 	end
 end
 
--- liro.loadEntities()
--- WIP Entity Loader for gamemode/entities/entities
-function liro.loadEntities()
-	local entityFoldersPath = gamemodeFolderName .. "/gamemode/entities/entities"
-	local entitys = file.Find(entityFoldersPath .. "/*", "LUA")
-	
-	for _, entityFolderName in pairs(entitys) do
-		if file.IsDir(entityFolderName) then
-			
-			-- Entity is in a folder structure, will attempt to load three different files
-			-- cl_init, shared.lua, init.lua in retrospective environments
-			liro.diagnosticPrint("Attempting to load entity '" .. entityFolderName .. "'")
-			
-		elseif string.Right(entityFolderName, 4) == ".lua" then
-			
-			-- Entity is a single lua file (probably shared, so will load it that way)
-			liro.diagnosticPrint("Attempting to load entity '" .. entityFolderName .. "'")
-			
+-- liro.versionCheck()
+-- Checks for a new version of liro
+function liro.versionCheck()
+	http.Fetch("https://api.github.com/repos/Alydus/liro/releases/latest", function(body, len, headers, code)
+		if not liro.isEmpty(body) then
+			local json = util.JSONToTable(body)
+			local latestVersion = tostring(json.tag_name)
+			latestVersion = string.gsub(latestVersion, "V", "")
+
+			-- Outdated Liro version warning
+			if liro.config.doOutdatedWarning and latestVersion != "" and tonumber(latestVersion) > tonumber(GAMEMODE.Version) and latestVersion and json then
+				liro.diagnosticPrint("Liro is outdated, updating is recommended. (Running V" .. GAMEMODE.Version .. ", Latest is " .. latestVersion .. ")")
+			end
+
+			-- If GAMEMODE.Version is higher than the latest release version, display a developmental version warning
+			if liro.config.doOutdatedWarning and latestVersion != "" and tonumber(latestVersion) < tonumber(GAMEMODE.Version) and latestVersion and json then
+				liro.diagnosticPrint("Liro is running a developmental version, most likely from development branch, expect issues. (Running V" .. GAMEMODE.Version .. ", Latest is " .. latestVersion .. ")")
+			end
 		end
-	end
+			end,
+		function(error)
+			liro.diagnosticPrint("liro.versionCheck() - HTTP Error has occured; error states: \"" .. error .. "\"")
+	end)
 end
 
 -- liro.loadModules()
@@ -128,12 +131,9 @@ function liro.loadModules()
 			table.insert(liro.networkStrings, networkString)
 			util.AddNetworkString(networkString)
 		else
-			liro.diagnosticPrint("Liro detected a empty network string in the config (liro.config.networkStrings[" .. networkStringIndex .. "])")
+			liro.diagnosticPrint("Liro detected a empty network string in the Liro config networkStrings (liro.config.networkStrings[" .. networkStringIndex .. "])")
 		end
 	end
-	
-	-- Load entities, after the global network strings so they can be used within entity files
-	liro.loadEntities()
 
 	-- Sort modules in order of loadPriority, taken from module data
 	table.sort(liro.toLoadModules, function(module1, module2)
@@ -159,95 +159,102 @@ function liro.loadModules()
 				end
 
 				if SERVER and moduleData.networkStrings and moduleData.networkStrings[1] then
-					for _, networkString in pairs(moduleData.networkStrings) do
+					for networkStringIndex, networkString in pairs(moduleData.networkStrings) do
 						if networkString != "" then
 							table.insert(liro.networkStrings, networkString)
 							util.AddNetworkString(networkString)
 						else
-							liro.diagnosticPrint("Liro detected a empty network string in module '" .. moduleData.folderName .. "'")
+							liro.diagnosticPrint("Liro detected a empty network string in module '" .. moduleData.folderName .. "' (moduleData.networkStrings[" .. networkStringIndex .. "]), it will not be added.")
 						end
 					end
 				end
-				
-				liro.activateDeveloperHook("liro.attemptLoad" .. moduleData.folderName)
 
-				liro.recursiveInclusion(moduleData, gamemodeFolderName .. "/gamemode/modules")
+				-- Check if the module is empty, no point running recursive inclusion if it's empty
+				local folderFiles, folderDirectories = file.Find(gamemodeFolderName .. "/gamemode/modules/" .. moduleData.folderName .. "/*", "LUA")
 
-				liro.activateDeveloperHook("liro.successfullyLoaded" .. moduleData.folderName, moduleData)
+				if #folderFiles == 0 and #folderDirectories == 0 then
+					liro.diagnosticPrint("Liro has detected an empty module (" .. moduleData.folderName .. "), it will not load.")
+				else
+					liro.activateDeveloperHook("liro.attemptLoad" .. moduleData.folderName)
 
-				liro.loadedModules[moduleName] = moduleData
+					liro.recursiveInclusion(moduleData, gamemodeFolderName .. "/gamemode/modules")
+
+					liro.activateDeveloperHook("liro.successfullyLoaded" .. moduleData.folderName, moduleData)
+
+					liro.loadedModules[moduleName] = moduleData
+				end
 			end
 
-			elseif table.HasValue(liro.config.disabledModuleNames, moduleName) then
+		elseif table.HasValue(liro.config.disabledModuleNames, moduleName) then
 				liro.unloadedDisabledModules[moduleName] = moduleData
-			end
 		end
+	end
 
 	-- Console Output
 	if liro.config.doModuleLoadMessages then
-		-- Version Checker
-		http.Fetch("https://api.github.com/repos/Alydus/liro/releases/latest", function(body, len, headers, code)
-			if not liro.isEmpty(body) then
-				local json = util.JSONToTable(body)
-				local latestVersion = tostring(json.tag_name)
-				latestVersion = string.gsub(latestVersion, "V", "")
+		local loadTime = math.Round(os.clock() - liro.startTime, 3)
+		if SERVER or (CLIENT and liro.config.showConsoleLoadSequenceClientside) then
 
-				-- Outdated Liro version warning
-				if liro.config.doOutdatedWarning and latestVersion != "" and tonumber(latestVersion) > tonumber(GAMEMODE.Version) and latestVersion and json then
-					liro.diagnosticPrint("Liro is outdated, updating is recommended. (Running V" .. GAMEMODE.Version .. ", Latest is " .. latestVersion .. ")")
-				end
+			if SERVER or (CLIENT and liro.config.showConsoleLoadSequenceClientside and liro.config.showConsoleLoadSequenceRanksOnly and LocalPlayer() and LocalPlayer():GetUserGroup() and table.HasValue(liro.config.showConsoleLoadSequenceClientsideRanks, LocalPlayer():GetUserGroup())) then
 
 				-- Linux System uppercase filenames/paths warning
 				if system.IsLinux() and liro.config.doLinuxUppercasePathWarning then
 					liro.diagnosticPrint("Liro is running on Linux, module(s) and/or uppercase file name paths will cause issues, same with spaces/tabs.")
 				end
 
-				if SERVER or (CLIENT and liro.config.showConsoleLoadSequenceClientside) then
+				print("/////////////////////////////////////////////////////////////////////")
+				print("//")
+				print("// Liro V" .. GAMEMODE.Version)
+				print("//")
+				print("// OS: " .. liro.getSystemOS())
+				print("// LLT (Load Time): " .. loadTime .. "s")
+				print("// IP (Public IP:Listen Port): " .. game.GetIPAddress())
+				print("// Enabled Modules: " .. table.Count(liro.loadedModules))
+				print("// Disabled Modules: " .. table.Count(liro.unloadedDisabledModules))
+				print("//")
+				print("/////////////////////////////////////////////////////////////////////")
+				print("//                   Post-Initialization Complete                  //")
 
-					if SERVER or (CLIENT and liro.config.showConsoleLoadSequenceClientside and liro.config.showConsoleLoadSequenceRanksOnly and LocalPlayer() and LocalPlayer():GetUserGroup() and table.HasValue(liro.config.showConsoleLoadSequenceClientsideRanks, LocalPlayer():GetUserGroup())) then
-				
-						print("/////////////////////////////////////////")
-						print("//             / Liro V" .. GAMEMODE.Version .. " /           //")
-						print("//         / OS: " .. liro.getSystemOS() .. " / LT: " .. math.Round(os.clock() - liro.startTime, 3) .. "s /")
-						print("/////////////////////////////////////////")
-						print("//     Post-Initialization Complete    //")
-
-						if next(liro.loadedModules) then
-							print("/////////////////////////////////////////")
-							print("// Loaded module(s):                   //")
-							for moduleLoadedOrderKey, moduleData in pairs(liro.loadedModules) do
-								if liro.moduleIntegrity(moduleData) then
-									print("// Module: \"" .. moduleData.folderName .. "\" by \"" .. moduleData.author .. "\"")
-								end
-							end
+				if next(liro.loadedModules) then
+					print("/////////////////////////////////////////////////////////////////////")
+					print("// Loaded Module(s):")
+					print("//")
+					for moduleLoadedOrderKey, moduleData in pairs(liro.loadedModules) do
+						if liro.moduleIntegrity(moduleData) then
+							print("// -- MODULE: " .. moduleData.folderName)
+							print("//    -- Developer: " .. moduleData.author .. ", Website: " .. moduleData.website .. ", Network Strings: " .. table.Count(moduleData.networkStrings))
 						end
-
-						if next(liro.unloadedDisabledModules) then
-							print("/////////////////////////////////////////")
-							print("// Disabled module(s):      //")
-							for _, moduleData in pairs(liro.unloadedDisabledModules) do
-								if liro.moduleIntegrity(moduleData) then
-									print("// Module: \"" .. moduleData.folderName .. "\" by \"" .. moduleData.author .. "\"")
-								end
-							end
-						end
-
-						print("/////////////////////////////////////////")
-						print("// Disabled: " .. table.Count(liro.unloadedDisabledModules) .. " | Enabled: " .. table.Count(liro.loadedModules))
-						print("/////////////////////////////////////////")
 					end
 				end
 
-				if CLIENT then
-					net.Start("liro.receiveClientInformation")
-					net.WriteString(util.TableToJSON({loadTime = math.Round(os.clock() - liro.startTime, 3), os = liro.getSystemOS(), country = system.GetCountry(), windowed = system.IsWindowed(), steamTime = system.SteamTime(), upTime = system.UpTime(), screenWidth = ScrW(), screenHeight = ScrH(), batteryPower = system.BatteryPower()}))
-					net.SendToServer()
+				if next(liro.unloadedDisabledModules) then
+					print("/////////////////////////////////////////////////////////////////////")
+					print("// Disabled Module(s):")
+					print("//")
+					for _, moduleData in pairs(liro.unloadedDisabledModules) do
+						if liro.moduleIntegrity(moduleData) then
+							print("// -- MODULE: " .. moduleData.folderName)
+							print("//    -- Developer: \"" .. moduleData.author .. "\", Website: \"" .. moduleData.website .. "\", Network Strings: " .. table.Count(moduleData.networkStrings))
+						end
+					end
 				end
+				print("//")
+				print("/////////////////////////////////////////////////////////////////////")
 			end
-		end)
+		end
+
+		if CLIENT then
+			net.Start("liro.receiveClientInformation")
+			net.WriteString(util.TableToJSON({loadTime = math.Round(os.clock() - liro.startTime, 3), os = liro.getSystemOS(), country = system.GetCountry(), windowed = system.IsWindowed(), steamTime = system.SteamTime(), upTime = system.UpTime(), screenWidth = ScrW(), screenHeight = ScrH(), batteryPower = system.BatteryPower()}))
+			net.SendToServer()
+		end
+
+		liro.diagnosticPrint("Liro has completed the multi-stage loading process in " .. loadTime .. "s.")
 	end
 
 	liro.activateDeveloperHook("liro.successfullyLoadedModules")
+
+	liro.versionCheck()
 end
 
 hook.Add("liro.registerModule", "loadModuleHook", function(moduleData)
@@ -271,4 +278,6 @@ hook.Add("liro.registerModule", "loadModuleHook", function(moduleData)
 	end
 end)
 
-liro.initalizeModules()
+function GM:Initialize()
+	liro.initalizeModules()
+end
