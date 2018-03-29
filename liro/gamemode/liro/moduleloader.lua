@@ -125,13 +125,15 @@ end
 -- liro.loadModules()
 -- Loads the files within the module in order of load priority and outputs to console status
 function liro.loadModules()
-	-- Add the global network strings defined in config
-	for networkStringIndex, networkString in pairs(liro.config.networkStrings) do
-		if networkString != "" then
-			table.insert(liro.networkStrings, networkString)
-			util.AddNetworkString(networkString)
-		else
-			liro.diagnosticPrint("Liro detected a empty network string in the Liro config networkStrings (liro.config.networkStrings[" .. networkStringIndex .. "])")
+	if SERVER then
+		-- Add the global network strings defined in config
+		for networkStringIndex, networkString in pairs(liro.config.networkStrings) do
+			if networkString and networkString != "" then
+				table.insert(liro.networkStrings, networkString)
+				util.AddNetworkString(networkString)
+			else
+				liro.diagnosticPrint("Liro detected a empty network string in the Liro config networkStrings (liro.config.networkStrings[" .. networkStringIndex .. "])")
+			end
 		end
 	end
 
