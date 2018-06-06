@@ -101,7 +101,7 @@ end
 -- Checks for a new version of liro
 function liro.versionCheck()
 	http.Fetch("https://api.github.com/repos/Alydus/liro/releases/latest", function(body, len, headers, code)
-		if not liro.isEmpty(body) then
+		if not liro.isEmpty(body) and not liro.isEmpty(len) and code == 304 then
 			local json = util.JSONToTable(body)
 			local latestVersion = tostring(json.tag_name)
 			latestVersion = string.gsub(latestVersion, "V", "")
@@ -116,9 +116,9 @@ function liro.versionCheck()
 				liro.diagnosticPrint("Liro is running a developmental version, most likely from development branch, expect issues. (Running V" .. GAMEMODE.Version .. ", Latest is " .. latestVersion .. ")")
 			end
 		end
-			end,
-		function(error)
-			liro.diagnosticPrint("liro.versionCheck() - HTTP Error has occured; error states: \"" .. error .. "\"")
+	end,
+	function(error)
+		liro.diagnosticPrint("liro.versionCheck() - HTTP Error has occured; error states: \"" .. error .. "\" with HTTP Code of; " .. code .. ")
 	end)
 end
 
@@ -204,7 +204,6 @@ function liro.loadModules()
 					liro.diagnosticPrint("Liro is running on Linux, module(s) and/or uppercase file name paths will cause issues, same with spaces/tabs.")
 				end
 
-				print("/////////////////////////////////////////////////////////////////////")
 				print("//")
 				print("// Liro V" .. GAMEMODE.Version)
 				print("//")
@@ -214,11 +213,9 @@ function liro.loadModules()
 				print("// Enabled Modules: " .. table.Count(liro.loadedModules))
 				print("// Disabled Modules: " .. table.Count(liro.unloadedDisabledModules))
 				print("//")
-				print("/////////////////////////////////////////////////////////////////////")
-				print("//                   Post-Initialization Complete                  //")
+				print("// Post-Initialization Complete")
 
 				if next(liro.loadedModules) then
-					print("/////////////////////////////////////////////////////////////////////")
 					print("// Loaded Module(s):")
 					print("//")
 					for moduleLoadedOrderKey, moduleData in pairs(liro.loadedModules) do
@@ -230,7 +227,6 @@ function liro.loadModules()
 				end
 
 				if next(liro.unloadedDisabledModules) then
-					print("/////////////////////////////////////////////////////////////////////")
 					print("// Disabled Module(s):")
 					print("//")
 					for _, moduleData in pairs(liro.unloadedDisabledModules) do
@@ -241,7 +237,6 @@ function liro.loadModules()
 					end
 				end
 				print("//")
-				print("/////////////////////////////////////////////////////////////////////")
 			end
 		end
 
