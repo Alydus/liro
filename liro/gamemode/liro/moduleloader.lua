@@ -118,7 +118,7 @@ function liro.versionCheck()
 		end
 	end,
 	function(error)
-		liro.diagnosticPrint("liro.versionCheck() - HTTP Error has occured; error states: \"" .. error .. "\" with HTTP Code of; " .. code .. ")
+		liro.diagnosticPrint("liro.versionCheck() - HTTP Error has occured with HTTP Code of; " .. code .. ", this is most likely due to Github rate limiting of the version fetching API.")
 	end)
 end
 
