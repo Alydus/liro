@@ -9,4 +9,4 @@
 ![Github Fork](https://img.shields.io/github/forks/Alydus/liro.svg?style=social)
 ![Github Stars](https://img.shields.io/github/stars/Alydus/liro.svg?style=social)
 
-Please see the [facepunch thread](https://facepunch.com/showthread.php?t=1563899) for more information.
+Please see the [facepunch thread](https://gmod.facepunch.com/f/gmodaddon/jjfx/Liro-A-modular-gamemode-base/) for more information.
