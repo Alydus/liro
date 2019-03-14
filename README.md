@@ -6,7 +6,7 @@
 ![Liro Upcoming Version](https://img.shields.io/badge/upcoming%20release-v2.0-blue.svg)
 ![Liro License](https://img.shields.io/badge/license-MIT-green.svg)
 
-![Github Fork](https://img.shields.io/github/issues/Alydus/liro.svg)
-![Github Stars](https://img.shields.io/github/stars/Alydus/liro.svg)
+![Github Fork](https://img.shields.io/github/issues/Alydus/liro.svg?style=social)
+![Github Stars](https://img.shields.io/github/stars/Alydus/liro.svg?style=social)
 
 Please see the [facepunch thread](https://facepunch.com/showthread.php?t=1563899) for more information.
