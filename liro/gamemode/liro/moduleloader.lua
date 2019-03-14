@@ -18,13 +18,15 @@ function liro.recursiveInclusion(moduleData, folderPath)
 	for _, fileToLoad in pairs(folderFiles) do
 		local relativePath = folderPath .. "/" .. fileToLoad
 
-		-- If the file attempting to load if the registermodule file name, it will not load it again
-		-- If the file isn't per-module blacklisted, load it
-		-- If the file isn't globally blacklisted, load it
-		if string.lower(fileToLoad) != string.lower(liro.config.registerFileName) or not table.HasValue(liro.config.globalBlacklistedFiles, fileToLoad) or not table.HasValue(blacklistedFiles, fileToLoad) then
-			-- Define load prefixes, use per-module prefixes, or default (defined in config)
+			-- If the file attempting to load if the registermodule file name, it will not load it again
+			if string.lower(fileToLoad) == string.lower(liro.config.registerFileName) then continue end
+			-- If the file isn't per-module blacklisted, load it
+			if table.HasValue(blacklistedFiles, fileToLoad) then continue end
+			-- If the file isn't globally blacklisted, load it
+			if table.HasValue(liro.config.globalBlacklistedFiles, fileToLoad) then continue end
 
-			if moduleData.loadPrefixes != nil or not moduleData.loadPrefixes then
+			-- Define load prefixes, use per-module prefixes, or default (defined in config)
+			if moduleData.loadPrefixes != nil and moduleData.loadPrefixes then
 				serverLoadPrefix = string.lower(moduleData.loadPrefixes.server)
 				clientLoadPrefix = string.lower(moduleData.loadPrefixes.client)
 				sharedLoadPrefix = string.lower(moduleData.loadPrefixes.shared)
@@ -39,10 +41,10 @@ function liro.recursiveInclusion(moduleData, folderPath)
 					include(relativePath)
 				end
 			elseif string.match( fileToLoad, "^" .. sharedLoadPrefix) then
-				include(relativePath)
-				if SERVER then
-					AddCSLuaFile(relativePath)
-				end
+                if SERVER then
+                    AddCSLuaFile(relativePath)
+                end
+                include(relativePath)
 			elseif string.match( fileToLoad, "^" .. clientLoadPrefix) then
 				AddCSLuaFile(relativePath)
 				if CLIENT then
@@ -196,9 +198,12 @@ function liro.loadModules()
 	if liro.config.doModuleLoadMessages then
 		local loadTime = math.Round(os.clock() - liro.startTime, 3)
 		if SERVER or (CLIENT and liro.config.showConsoleLoadSequenceClientside) then
+		  local allow = true
+		  if CLIENT and liro.config.showConsoleLoadSequenceRanksOnly and not table.HasValue(liro.config.showConsoleLoadSequenceClientsideRanks, LocalPlayer():GetUserGroup()) then
+			  allow = false
+		  end
 
-			if SERVER or (CLIENT and liro.config.showConsoleLoadSequenceClientside and liro.config.showConsoleLoadSequenceRanksOnly and LocalPlayer() and LocalPlayer():GetUserGroup() and table.HasValue(liro.config.showConsoleLoadSequenceClientsideRanks, LocalPlayer():GetUserGroup())) then
-
+		  if SERVER or (CLIENT and allow) then
 				-- Linux System uppercase filenames/paths warning
 				if system.IsLinux() and liro.config.doLinuxUppercasePathWarning then
 					liro.diagnosticPrint("Liro is running on Linux, module(s) and/or uppercase file name paths will cause issues, same with spaces/tabs.")
