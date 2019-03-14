@@ -18,38 +18,37 @@ function liro.recursiveInclusion(moduleData, folderPath)
 	for _, fileToLoad in pairs(folderFiles) do
 		local relativePath = folderPath .. "/" .. fileToLoad
 
-			-- If the file attempting to load if the registermodule file name, it will not load it again
-			if string.lower(fileToLoad) == string.lower(liro.config.registerFileName) then continue end
-			-- If the file isn't per-module blacklisted, load it
-			if table.HasValue(blacklistedFiles, fileToLoad) then continue end
-			-- If the file isn't globally blacklisted, load it
-			if table.HasValue(liro.config.globalBlacklistedFiles, fileToLoad) then continue end
+		-- If the file attempting to load if the registermodule file name, it will not load it again
+		if string.lower(fileToLoad) == string.lower(liro.config.registerFileName) then continue end
+		-- If the file isn't per-module blacklisted, load it
+		if table.HasValue(blacklistedFiles, fileToLoad) then continue end
+		-- If the file isn't globally blacklisted, load it
+		if table.HasValue(liro.config.globalBlacklistedFiles, fileToLoad) then continue end
 
-			-- Define load prefixes, use per-module prefixes, or default (defined in config)
-			if moduleData.loadPrefixes != nil and moduleData.loadPrefixes then
-				serverLoadPrefix = string.lower(moduleData.loadPrefixes.server)
-				clientLoadPrefix = string.lower(moduleData.loadPrefixes.client)
-				sharedLoadPrefix = string.lower(moduleData.loadPrefixes.shared)
-			else
-				serverLoadPrefix = string.lower(liro.config.moduleLoadPrefixes.server)
-				clientLoadPrefix = string.lower(liro.config.moduleLoadPrefixes.client)
-				sharedLoadPrefix = string.lower(liro.config.moduleLoadPrefixes.shared)
+		-- Define load prefixes, use per-module prefixes, or default (defined in config)
+		if moduleData.loadPrefixes != nil and moduleData.loadPrefixes then
+			serverLoadPrefix = string.lower(moduleData.loadPrefixes.server)
+			clientLoadPrefix = string.lower(moduleData.loadPrefixes.client)
+			sharedLoadPrefix = string.lower(moduleData.loadPrefixes.shared)
+		else
+			serverLoadPrefix = string.lower(liro.config.moduleLoadPrefixes.server)
+			clientLoadPrefix = string.lower(liro.config.moduleLoadPrefixes.client)
+			sharedLoadPrefix = string.lower(liro.config.moduleLoadPrefixes.shared)
+		end
+
+		if string.match( fileToLoad, "^" .. serverLoadPrefix) then
+			if SERVER then
+				include(relativePath)
 			end
-
-			if string.match( fileToLoad, "^" .. serverLoadPrefix) then
-				if SERVER then
-					include(relativePath)
-				end
-			elseif string.match( fileToLoad, "^" .. sharedLoadPrefix) then
-                if SERVER then
-                    AddCSLuaFile(relativePath)
-                end
-                include(relativePath)
-			elseif string.match( fileToLoad, "^" .. clientLoadPrefix) then
-				AddCSLuaFile(relativePath)
-				if CLIENT then
-					include(relativePath)
-				end
+		elseif string.match( fileToLoad, "^" .. sharedLoadPrefix) then
+			if SERVER then
+			    AddCSLuaFile(relativePath)
+			end
+			include(relativePath)
+		elseif string.match( fileToLoad, "^" .. clientLoadPrefix) then
+			AddCSLuaFile(relativePath)
+			if CLIENT then
+				include(relativePath)
 			end
 		end
 	end
