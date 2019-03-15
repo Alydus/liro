@@ -156,7 +156,7 @@ function liro.loadModules()
 			if not (liro.config.doQuickDisableModulePrefix and (string.sub(moduleName, 1, 4) == "DSB_")) then
 
 				if liro.loadedModules[moduleName] then
-					liro.diagnosticPrint("Liro has failed to fully load, two modules have the same folder name")
+					liro.diagnosticPrint("Liro has failed to fully load, two modules have the same folder name.")
 
 					return false
 				end
