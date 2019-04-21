@@ -15,7 +15,7 @@ end
 -- liro.isEmpty(variable)
 -- Checks if a variable is nil
 function liro.isEmpty(s)
-	return s == nil or s == ""
+	return s == nil or string.Trim(s) == ""
 end
 
 -- liro.moduleIntegrity(moduleData)
@@ -86,4 +86,29 @@ function liro.diagnosticPrint(message)
 	if message != "" and message then
 		print(liro.config.diagnosticPrintPrefix .. message)
 	end
+end
+
+-- liro.versionCheck()
+-- Checks for a new version of liro
+function liro.versionCheck()
+	http.Fetch("https://api.github.com/repos/Alydus/liro/releases/latest", function(body, len, headers, code)
+		if not liro.isEmpty(body) and not liro.isEmpty(len) and code == 304 then
+			local json = util.JSONToTable(body)
+			local latestVersion = tostring(json.tag_name)
+			latestVersion = string.gsub(latestVersion, "V", "")
+
+			-- Outdated Liro version warning
+			if liro.config.doOutdatedWarning and latestVersion != "" and tonumber(latestVersion) > tonumber(GAMEMODE.Version) and latestVersion and json then
+				liro.diagnosticPrint("Liro is outdated, updating is recommended. (Running V" .. GAMEMODE.Version .. ", Latest is " .. latestVersion .. ")")
+			end
+
+			-- If GAMEMODE.Version is higher than the latest release version, display a developmental version warning
+			if liro.config.doOutdatedWarning and latestVersion != "" and tonumber(latestVersion) < tonumber(GAMEMODE.Version) and latestVersion and json then
+				liro.diagnosticPrint("Liro is running a developmental version, most likely from development branch, expect issues. (Running V" .. GAMEMODE.Version .. ", Latest is " .. latestVersion .. ")")
+			end
+		end
+	end,
+	function(error)
+		liro.diagnosticPrint("liro.versionCheck() - HTTP Error has occured with HTTP Code of; " .. code .. ", this is most likely due to Github rate limiting of the version fetching API.")
+	end)
 end
