@@ -5,6 +5,12 @@ include("shared.lua")
 AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 
+local isRefresh = false
+
+if liro then
+	isRefresh = true
+end
+
 -- Define base Liro data array
 liro = liro or {}
 
@@ -32,3 +38,11 @@ include("liro/datamanagement.lua")
 -- Include module loader
 include("liro/moduleloader.lua")
 AddCSLuaFile("liro/moduleloader.lua")
+
+if isRefresh and liro.bootComplete then
+	liro.diagnosticPrint("Lua Auto-Refresh loaded Liro " .. GAMEMODE.Version .. " serverside code in " .. math.Round(os.clock() - liro.startTime, 3) .. " second(s).")
+else
+	liro.diagnosticPrint("Successfully loaded Liro " .. GAMEMODE.Version .. " in " .. math.Round(os.clock() - liro.startTime, 3) .. " second(s).")
+end
+
+liro.bootComplete = true
