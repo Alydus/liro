@@ -18,6 +18,15 @@ function liro.isEmpty(s)
 	return s == nil or string.Trim(s) == ""
 end
 
+-- liro.isEmptyUnknown(variable)
+-- Returns 'Unknown' if the variable is nil or an empty string
+function liro.isEmptyUnknown(s)
+	if not s or string.Trim(s) == "" then
+		return "Unknown"	
+	end
+	return s
+end
+
 -- liro.moduleIntegrity(moduleData)
 -- Checks if provided module data is valid
 function liro.moduleIntegrity(md)
