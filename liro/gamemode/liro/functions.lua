@@ -21,7 +21,7 @@ end
 -- liro.moduleIntegrity(moduleData)
 -- Checks if provided module data is valid
 function liro.moduleIntegrity(md)
-	if liro.isEmpty(md.folderName) or liro.isEmpty(md.loadPriority) or liro.isEmpty(md.author) or liro.isEmpty(md.description) or liro.isEmpty(md.website) or liro.isEmpty(md.version) then
+	if liro.isEmpty(md.folderName) or liro.isEmpty(md.loadPriority) or liro.isEmpty(md.version) then
 		return false
 	end
 	return true
