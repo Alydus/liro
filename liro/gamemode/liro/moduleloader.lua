@@ -200,7 +200,7 @@ function liro.loadModules()
 					for moduleLoadedOrderKey, moduleData in pairs(liro.loadedModules) do
 						if liro.moduleIntegrity(moduleData) then
 							print("// -- MODULE: " .. moduleData.folderName)
-							print("//    -- Developer: " .. moduleData.author .. ", Website: " .. moduleData.website .. ", Network Strings: " .. table.Count(moduleData.networkStrings))
+							print("//    -- Developer: " .. liro.isEmptyUnknown(moduleData.author) .. ", Website: " .. liro.isEmptyUnknown(moduleData.website) .. ", Network Strings: " .. table.Count(moduleData.networkStrings))
 						end
 					end
 				end
