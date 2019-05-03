@@ -229,7 +229,9 @@ function liro.loadModules()
 
 	liro.activateDeveloperHook("liro.successfullyLoadedModules")
 
-	liro.versionCheck()
+	if SERVER and liro.config.doOutdatedWarning then
+		liro.versionCheck()
+	end
 end
 
 hook.Add("liro.registerModule", "loadModuleHook", function(moduleData)
