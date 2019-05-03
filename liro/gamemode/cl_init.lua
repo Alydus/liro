@@ -1,5 +1,9 @@
 -- Liro - cl_init.lua
 
+-- Micro optimisations
+local include = include
+local os = os
+
 -- Include dependant files
 include("shared.lua")
 
