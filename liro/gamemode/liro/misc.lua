@@ -1,7 +1,6 @@
 -- Liro - liro/misc.lua
 
 -- Micro optimisations
-
 local math = math
 local os = os
 
