@@ -162,9 +162,8 @@ function liro.loadModules()
 					liro.loadedModules[moduleName] = moduleData
 				end
 			end
-
 		elseif table.HasValue(liro.config.disabledModuleNames, moduleName) then
-				liro.unloadedDisabledModules[moduleName] = moduleData
+			liro.unloadedDisabledModules[moduleName] = moduleData
 		end
 	end
 
@@ -184,7 +183,7 @@ function liro.loadModules()
 				end
 
 				print("//")
-				print("// Liro V" .. GAMEMODE.Version)
+				print("// Loaded Liro V" .. GAMEMODE.LiroVersion .. " in " .. loadTime .. "s")
 				print("//")
 				print("// OS: " .. liro.getSystemOS())
 				print("// LLT (Load Time): " .. loadTime .. "s")
@@ -225,7 +224,7 @@ function liro.loadModules()
 			net.SendToServer()
 		end
 
-		liro.diagnosticPrint("Liro has completed the multi-stage loading process in " .. loadTime .. "s.")
+		--liro.diagnosticPrint("Liro has completed the multi-stage loading process in " .. loadTime .. "s.")
 	end
 
 	liro.activateDeveloperHook("liro.successfullyLoadedModules")
