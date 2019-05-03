@@ -1,5 +1,16 @@
 -- Liro - moduleloader.lua
 
+-- Micro optimisations
+local file = file
+local pairs = pairs
+local string = string
+local table = table
+local include = include
+local AddCSLuaFile = AddCSLuaFile
+local util = util
+local math = math
+local os = os
+
 local gamemodeFolderName = GM.FolderName
 liro.networkStrings = {}
 
