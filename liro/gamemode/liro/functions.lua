@@ -1,5 +1,17 @@
 -- Liro - liro/functions.lua
 
+-- Micro optimisation
+local hook = hook
+local string = string
+local jit = jit
+local pairs = pairs
+local math = math
+local istable = istable
+local util = util
+local tostring = tostring
+local tonumber = tonumber
+local http = http
+
 -- liro.activateDeveloperHook()
 -- Calls a hook after checking if developer hooks are enabled
 function liro.activateDeveloperHook(name, arg)
@@ -76,7 +88,7 @@ end
 -- liro.isModuleLoaded(module)
 -- Returns if the provided module name/data is loaded
 function liro.isModuleLoaded(module)
-	if module != "" then
+	if string.Trim(tostring(module)) != "" then
 		if istable(module) then
 			if liro.moduleIntegrity(module) then
 				return liro.loadedModules[module.folderName]
