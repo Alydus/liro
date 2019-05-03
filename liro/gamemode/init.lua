@@ -1,5 +1,12 @@
 -- Liro - init.lua
 
+-- Micro optimisations
+local include = include
+local AddCSLuaFile = AddCSLuaFile
+local util = util
+local os = os
+local math = math
+
 -- Include dependant files
 include("shared.lua")
 AddCSLuaFile("cl_init.lua")
@@ -40,9 +47,9 @@ include("liro/moduleloader.lua")
 AddCSLuaFile("liro/moduleloader.lua")
 
 if isRefresh and liro.bootComplete then
-	liro.diagnosticPrint("Lua Auto-Refresh loaded Liro " .. GAMEMODE.Version .. " serverside code in " .. math.Round(os.clock() - liro.startTime, 3) .. " second(s).")
+	liro.diagnosticPrint("Lua Auto-Refresh loaded Liro " .. GAMEMODE.LiroVersion .. " serverside code in " .. math.Round(os.clock() - liro.startTime, 3) .. " second(s).")
 else
-	liro.diagnosticPrint("Successfully loaded Liro " .. GAMEMODE.Version .. " in " .. math.Round(os.clock() - liro.startTime, 3) .. " second(s).")
+	liro.diagnosticPrint("Successfully loaded Liro " .. GAMEMODE.LiroVersion .. " in " .. math.Round(os.clock() - liro.startTime, 3) .. " second(s).")
 end
 
 liro.bootComplete = true
