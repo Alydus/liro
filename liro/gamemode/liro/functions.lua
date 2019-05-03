@@ -107,13 +107,13 @@ function liro.versionCheck()
 			latestVersion = string.gsub(latestVersion, "V", "")
 
 			-- Outdated Liro version warning
-			if liro.config.doOutdatedWarning and latestVersion != "" and tonumber(latestVersion) > tonumber(GAMEMODE.Version) and latestVersion and json then
-				liro.diagnosticPrint("Liro is outdated, updating is recommended. (Running V" .. GAMEMODE.Version .. ", Latest is " .. latestVersion .. ")")
+			if liro.config.doOutdatedWarning and latestVersion != "" and tonumber(latestVersion) > tonumber(GAMEMODE.LiroVersion) and latestVersion and json then
+				liro.diagnosticPrint("Liro is outdated, updating is recommended. (Running V" .. GAMEMODE.LiroVersion .. ", Latest is " .. latestVersion .. ")")
 			end
 
-			-- If GAMEMODE.Version is higher than the latest release version, display a developmental version warning
-			if liro.config.doOutdatedWarning and latestVersion != "" and tonumber(latestVersion) < tonumber(GAMEMODE.Version) and latestVersion and json then
-				liro.diagnosticPrint("Liro is running a developmental version, most likely from development branch, expect issues. (Running V" .. GAMEMODE.Version .. ", Latest is " .. latestVersion .. ")")
+			-- If GAMEMODE.LiroVersion is higher than the latest release version, display a developmental version warning
+			if liro.config.doOutdatedWarning and latestVersion != "" and tonumber(latestVersion) < tonumber(GAMEMODE.LiroVersion) and latestVersion and json then
+				liro.diagnosticPrint("Liro is running a developmental version, most likely from development branch, expect issues. Detected Liro Version is higher than publically released version. (Running V" .. GAMEMODE.LiroVersion .. ", Latest is " .. latestVersion .. ")")
 			end
 		end
 	end,
