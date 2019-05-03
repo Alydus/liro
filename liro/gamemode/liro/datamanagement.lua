@@ -1,8 +1,13 @@
 -- Liro - datamanagement.lua
 
-averageLLT = averageLTT or {0}
+-- Micro optimisation
+local net = net
+local util = util
+local table = table
 
 -- Handling of players serverside when they post-initialize Liro on their clients
+averageLLT = averageLTT or {0}
+
 net.Receive("liro.receiveClientInformation", function(len, ply)
 	local playerDataTable = net.ReadString()
 	playerDataTable = util.JSONToTable(playerDataTable)
