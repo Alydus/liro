@@ -194,7 +194,7 @@ function liro.loadModules()
 				end
 
 				print("//")
-				print("// Loaded Liro V" .. GAMEMODE.LiroVersion .. " in " .. loadTime .. "s")
+				print("// Loaded Liro V" .. GM.LiroVersion .. " in " .. loadTime .. "s")
 				print("//")
 				print("// OS: " .. liro.getSystemOS())
 				print("// LLT (Load Time): " .. loadTime .. "s")
