@@ -47,9 +47,9 @@ include("liro/moduleloader.lua")
 AddCSLuaFile("liro/moduleloader.lua")
 
 if isRefresh and liro.bootComplete then
-	liro.diagnosticPrint("Lua Auto-Refresh loaded Liro " .. GAMEMODE.LiroVersion .. " serverside code in " .. math.Round(os.clock() - liro.startTime, 3) .. " second(s).")
+	liro.diagnosticPrint("Lua Auto-Refresh loaded Liro " .. GM.LiroVersion .. " serverside code in " .. math.Round(os.clock() - liro.startTime, 3) .. " second(s).")
 else
-	liro.diagnosticPrint("Successfully loaded Liro " .. GAMEMODE.LiroVersion .. " in " .. math.Round(os.clock() - liro.startTime, 3) .. " second(s).")
+	liro.diagnosticPrint("Successfully loaded Liro " .. GM.LiroVersion .. " in " .. math.Round(os.clock() - liro.startTime, 3) .. " second(s).")
 end
 
 liro.bootComplete = true
