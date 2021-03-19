@@ -8,4 +8,4 @@ exampleModule.config = {
 function exampleModule.initializeModule()
 	-- Example Module Loaded
 end
-hook.Add("liro.successfullyLoadedexamplemodule", "moduleLoadedExampleHook", exampleModule.initializeModule())
+hook.Add("liro.successfullyLoadedexamplemodule", "moduleLoadedExampleHook", exampleModule.initializeModule)
